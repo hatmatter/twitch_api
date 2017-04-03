@@ -1,0 +1,13 @@
+[package]
+name = "twitch_api"
+version = "0.1.0"
+authors = ["Matt Shanker <hatmatteroffact@gmail.com>"]
+
+[dependencies]
+chrono = { version = "0.3", features = ["serde", "rustc-serialize"] }
+hyper = "0.10.4"
+hyper-rustls = "0.3.1"
+serde = "0.9"
+serde_json = "0.9"
+serde_derive = "0.9"
+urlparse = "0.7.3"
