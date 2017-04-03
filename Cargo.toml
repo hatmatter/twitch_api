@@ -2,6 +2,12 @@
 name = "twitch_api"
 version = "0.1.0"
 authors = ["Matt Shanker <hatmatteroffact@gmail.com>"]
+description = "Twitch API library"
+repository = "https://github.com/hatmatter/twitch_api"
+readme = "README"
+keywords = ["twitch", "api"]
+categories = ["api-bindings"]
+license = "Apache-2.0"
 
 [dependencies]
 chrono = { version = "0.3", features = ["serde", "rustc-serialize"] }
