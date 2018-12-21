@@ -1,3 +1,5 @@
+# This project is no longer maintained
+
 # Note
 This was built against an older version of the Twitch API. Some updates may be necessary to work with the latest version of the API.
 
