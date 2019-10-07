@@ -1,7 +1,7 @@
+// This file was ((taken|adapted)|contains (data|code)) from twitch_api,
 // Copyright 2017 Matt Shanker
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
+// It's licensed under the Apache License, Version 2.0.
+// You may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
 //     http://www.apache.org/licenses/LICENSE-2.0
@@ -12,25 +12,29 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// (Modifications|Other (data|code)|Everything else) Copyright 2019 the libtwitch-rs authors.
+//  See copying.md for further legal info.
+
 extern crate chrono;
 extern crate serde_json;
 
-use std::collections::HashMap;
 use std;
+use std::collections::HashMap;
 use std::io::Write;
 
-use super::TwitchClient;
 use super::response::TwitchResult;
+use super::TwitchClient;
 
 /// Gets games sorted by number of current viewers on Twitch, most popular first
 ///
 /// #### Authentication: `None`
 ///
-pub fn top<'c>(c: &'c TwitchClient)
-        -> TwitchResult<TopGames<'c>> {
-    let iter = TopGames { client: c,
-                          cur: None,
-                          offset: 0 };
+pub fn top<'c>(c: &'c TwitchClient) -> TwitchResult<TopGames<'c>> {
+    let iter = TopGames {
+        client: c,
+        cur: None,
+        offset: 0,
+    };
     Ok(iter)
 }
 
@@ -83,7 +87,6 @@ impl<'c> Iterator for TopGames<'c> {
 #[cfg(test)]
 mod tests {
     use super::super::new;
-    use super::super::response;
     use super::super::tests::CLIENTID;
 
     #[test]

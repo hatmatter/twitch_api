@@ -1,7 +1,7 @@
+// This file was ((taken|adapted)|contains (data|code)) from twitch_api,
 // Copyright 2017 Matt Shanker
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
+// It's licensed under the Apache License, Version 2.0.
+// You may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
 //     http://www.apache.org/licenses/LICENSE-2.0
@@ -12,26 +12,28 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// (Modifications|Other (data|code)|Everything else) Copyright 2019 the libtwitch-rs authors.
+//  See copying.md for further legal info.
+
 extern crate chrono;
 extern crate serde_json;
 
 use self::chrono::prelude::*;
 
-use super::TwitchClient;
 use super::response::TwitchResult;
+use super::TwitchClient;
 
-use std::fmt;
 use std;
-use std::io::Write;
 use std::collections::HashMap;
+use std::fmt;
+use std::io::Write;
 
 /// Gets a specified video object
 ///
 /// #### Authentication: `None`
 ///
-pub fn get(c: &TwitchClient, video_id: &str)
-        -> TwitchResult<Video> {
-    let r = try!(c.get::<Video>(&format!("/videos/{}", video_id)));
+pub fn get(c: &TwitchClient, video_id: &str) -> TwitchResult<Video> {
+    let r = r#try!(c.get::<Video>(&format!("/videos/{}", video_id)));
     Ok(r)
 }
 
@@ -40,19 +42,22 @@ pub fn get(c: &TwitchClient, video_id: &str)
 ///
 /// #### Authentication: `None`
 ///
-pub fn top<'c>(c: &'c TwitchClient,
-           game: Option<&str>,
-           period: Option<TopVideoPeriod>)
-        -> TwitchResult<TopVideoIterator<'c>> {
+pub fn top<'c>(
+    c: &'c TwitchClient,
+    game: Option<&str>,
+    period: Option<TopVideoPeriod>,
+) -> TwitchResult<TopVideoIterator<'c>> {
     let game = match game {
         Some(g) => Some(String::from(g)),
-        None    => None
+        None => None,
     };
-    let iter = TopVideoIterator { client: c,
-                                  game: game,
-                                  period: period,
-                                  cur: None,
-                                  offset: 0 };
+    let iter = TopVideoIterator {
+        client: c,
+        game: game,
+        period: period,
+        cur: None,
+        offset: 0,
+    };
     Ok(iter)
 }
 
@@ -61,9 +66,12 @@ pub fn top<'c>(c: &'c TwitchClient,
 ///
 /// #### Authentication: `user_read`
 ///
-pub fn followed<'c>(c: &'c TwitchClient)
-        -> TwitchResult<FollowedVideoIterator<'c>> {
-    let iter = FollowedVideoIterator { client: c, cur: None, offset: 0 };
+pub fn followed<'c>(c: &'c TwitchClient) -> TwitchResult<FollowedVideoIterator<'c>> {
+    let iter = FollowedVideoIterator {
+        client: c,
+        cur: None,
+        offset: 0,
+    };
     Ok(iter)
 }
 
@@ -115,7 +123,7 @@ pub struct TopVideoIterator<'c> {
 pub enum TopVideoPeriod {
     week,
     month,
-    all
+    all,
 }
 
 impl fmt::Display for TopVideoPeriod {
@@ -178,7 +186,7 @@ impl<'c> Iterator for FollowedVideoIterator<'c> {
 mod tests {
     use super::super::new;
     use super::super::response::ApiError;
-    use super::super::tests::{CLIENTID, TOKEN, CHANID, TESTCH};
+    use super::super::tests::{CHANID, CLIENTID, TESTCH, TOKEN};
 
     #[test]
     fn videos() {
@@ -186,29 +194,48 @@ mod tests {
         c.set_oauth_token(TOKEN);
 
         if let Some(video) = match super::followed(&c) {
-                Ok(mut r) => r.next(),
-                Err(r)    => { println!("{:?}", r); assert!(false); None }
-            } {
+            Ok(mut r) => r.next(),
+            Err(r) => {
+                println!("{:?}", r);
+                assert!(false);
+                None
+            }
+        } {
             match super::get(&c, &video.id) {
-                Ok(r)  => assert_eq!(r.id, video.id),
-                Err(r) => { println!("{:?}", r); assert!(false); }
+                Ok(r) => assert_eq!(r.id, video.id),
+                Err(r) => {
+                    println!("{:?}", r);
+                    assert!(false);
+                }
             }
         }
         match super::top(&c, None, None) {
-                Ok(mut r) => assert!(r.next().is_some()),
-                Err(r)    => { println!("{:?}", r); assert!(false); }
+            Ok(mut r) => assert!(r.next().is_some()),
+            Err(r) => {
+                println!("{:?}", r);
+                assert!(false);
+            }
         }
         match super::top(&c, Some("IRL"), None) {
-                Ok(mut r) => assert!(r.next().is_some()),
-                Err(r)    => { println!("{:?}", r); assert!(false); }
+            Ok(mut r) => assert!(r.next().is_some()),
+            Err(r) => {
+                println!("{:?}", r);
+                assert!(false);
+            }
         }
         match super::top(&c, None, Some(super::TopVideoPeriod::month)) {
-                Ok(mut r) => assert!(r.next().is_some()),
-                Err(r)    => { println!("{:?}", r); assert!(false); }
+            Ok(mut r) => assert!(r.next().is_some()),
+            Err(r) => {
+                println!("{:?}", r);
+                assert!(false);
+            }
         }
         match super::top(&c, Some("IRL"), Some(super::TopVideoPeriod::month)) {
-                Ok(mut r) => assert!(r.next().is_some()),
-                Err(r)    => { println!("{:?}", r); assert!(false); }
+            Ok(mut r) => assert!(r.next().is_some()),
+            Err(r) => {
+                println!("{:?}", r);
+                assert!(false);
+            }
         }
     }
 }

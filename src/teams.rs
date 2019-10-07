@@ -1,7 +1,7 @@
+// This file was ((taken|adapted)|contains (data|code)) from twitch_api,
 // Copyright 2017 Matt Shanker
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
+// It's licensed under the Apache License, Version 2.0.
+// You may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
 //     http://www.apache.org/licenses/LICENSE-2.0
@@ -12,6 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// (Modifications|Other (data|code)|Everything else) Copyright 2019 the libtwitch-rs authors.
+//  See copying.md for further legal info.
+
 extern crate chrono;
 extern crate serde_json;
 extern crate urlparse;
@@ -21,17 +24,20 @@ use std::io::Write;
 
 use self::chrono::prelude::*;
 
-use super::TwitchClient;
 use super::response::TwitchResult;
 use super::users::User;
+use super::TwitchClient;
 
 /// Gets all active teams
 ///
 /// #### Authentication: `None`
 ///
-pub fn get_all<'c>(c: &'c TwitchClient)
-        -> TwitchResult<TeamIterator<'c>> {
-    let iter = TeamIterator { client: c, cur: None, offset: 0 };
+pub fn get_all<'c>(c: &'c TwitchClient) -> TwitchResult<TeamIterator<'c>> {
+    let iter = TeamIterator {
+        client: c,
+        cur: None,
+        offset: 0,
+    };
     Ok(iter)
 }
 
@@ -39,9 +45,8 @@ pub fn get_all<'c>(c: &'c TwitchClient)
 ///
 /// #### Authentication: `None`
 ///
-pub fn get(c: &TwitchClient, team_name: &str)
-        -> TwitchResult<Team> {
-    let r = try!(c.get::<Team>(&format!("/teams/{}", team_name)));
+pub fn get(c: &TwitchClient, team_name: &str) -> TwitchResult<Team> {
+    let r = r#try!(c.get::<Team>(&format!("/teams/{}", team_name)));
     Ok(r)
 }
 
@@ -91,17 +96,20 @@ impl<'c> Iterator for TeamIterator<'c> {
 mod tests {
     use super::super::new;
     use super::super::response;
-    use super::super::tests::{CLIENTID, TOKEN, CHANID};
+    use super::super::tests::{CHANID, CLIENTID, TOKEN};
 
     #[test]
     fn get_all() {
         let c = new(String::from(CLIENTID));
         match super::get_all(&c) {
-            Ok(mut r)  => match r.next() {
+            Ok(mut r) => match r.next() {
                 Some(team) => assert_ne!(team.id, 0),
-                None       => assert!(false)
+                None => assert!(false),
             },
-            Err(r) => { println!("{:?}", r); assert!(false); }
+            Err(r) => {
+                println!("{:?}", r);
+                assert!(false);
+            }
         }
     }
 }

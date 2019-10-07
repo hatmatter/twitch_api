@@ -1,7 +1,7 @@
+// This file was ((taken|adapted)|contains (data|code)) from twitch_api,
 // Copyright 2017 Matt Shanker
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
+// It's licensed under the Apache License, Version 2.0.
+// You may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
 //     http://www.apache.org/licenses/LICENSE-2.0
@@ -11,6 +11,9 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
+// (Modifications|Other (data|code)|Everything else) Copyright 2019 the libtwitch-rs authors.
+//  See copying.md for further legal info.
 
 extern crate hyper;
 extern crate serde_json;
@@ -103,12 +106,16 @@ pub struct ErrorResponse {
     pub status: i32,
     pub message: String,
     #[serde(skip_deserializing)]
-    pub cause: Option<Box<Error>>
+    pub cause: Option<Box<Error>>,
 }
 
 impl fmt::Display for ErrorResponse {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "TwitchError: (Status: {}, Error: {}, Message: {})", &self.status, self.error, &self.message)
+        write!(
+            f,
+            "TwitchError: (Status: {}, Error: {}, Message: {})",
+            &self.status, self.error, &self.message
+        )
     }
 }
 
@@ -119,7 +126,7 @@ impl Error for ErrorResponse {
 
     fn cause(&self) -> Option<&Error> {
         if let Some(ref cause) = self.cause {
-            return Some(cause.as_ref())
+            return Some(cause.as_ref());
         } else {
             None
         }
@@ -157,8 +164,14 @@ macro_rules! next_result {
                     $obj.offset += r.$lst.len() as i32;
                     $obj.cur = Some(r);
                     values_exist = true;
-                },
-                Err(r) => writeln!(&mut std::io::stderr(), "{} Error: {}", stringify!($serde), r).unwrap()
+                }
+                Err(r) => writeln!(
+                    &mut std::io::stderr(),
+                    "{} Error: {}",
+                    stringify!($serde),
+                    r
+                )
+                .unwrap(),
             };
         } else {
             values_exist = true;
@@ -179,10 +192,10 @@ macro_rules! next_result {
                     $obj.cur = None;
                 }
                 x
-            },
-            false => None
+            }
+            false => None,
         }
-    }}
+    }};
 }
 
 macro_rules! next_result_cursor {
@@ -193,7 +206,7 @@ macro_rules! next_result_cursor {
             {
                 if let Some(ref cursor) = $obj.cursor {
                     if cursor.len() == 0 {
-                        return None
+                        return None;
                     } else {
                         new_url.push_str("&cursor=");
                         new_url.push_str(cursor.clone().as_str());
@@ -209,8 +222,14 @@ macro_rules! next_result_cursor {
                     }
                     $obj.cursor = r._cursor.clone();
                     $obj.cur = Some(r);
-                },
-                Err(r) => writeln!(&mut std::io::stderr(), "{} Error: {}", stringify!($serde), r).unwrap()
+                }
+                Err(r) => writeln!(
+                    &mut std::io::stderr(),
+                    "{} Error: {}",
+                    stringify!($serde),
+                    r
+                )
+                .unwrap(),
             };
         } else {
             values_exist = true;
@@ -231,8 +250,8 @@ macro_rules! next_result_cursor {
                     $obj.cur = None;
                 }
                 x
-            },
-            false => None
+            }
+            false => None,
         }
-    }}
+    }};
 }
