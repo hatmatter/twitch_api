@@ -1,4 +1,4 @@
-# Twitch API library
+# libtwitch-rs [![crates.io version][1]][2] ![GNU AGPLv3][agpl-logo]
 A Rust library for the Twitch API.
 
 # Contributing
@@ -32,4 +32,9 @@ if let Some(user) = match users::get(&c) {
 ```
 
 # License
-GNU AGPLv3 or later; see copying.md and legal/AGPL-v3.
+GNU AGPL-3.0-or-later; see [copying.md](copying.md) and [legal/AGPL-v3](legal/AGPL-v3).
+
+
+[1]: https://img.shields.io/crates/v/libtwitch-rs.svg?style=flat-square
+[2]: https://crates.io/crates/libtwitch-rs
+[agpl-logo]: https://www.gnu.org/graphics/agplv3-88x31.png
