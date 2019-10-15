@@ -68,47 +68,46 @@ use hyper::Client;
 
 use serde::de::Deserialize;
 use serde::Serialize;
-use std::io::Write;
-use std::io::{stderr, Read};
 use std::env;
 use std::fs;
+use std::io::Write;
+use std::io::{stderr, Read};
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Credentials {
     client_id: String,
     // add when channel_ids are a thing
     // channel_id: String,
-    token: Option<String>
+    token: Option<String>,
 }
 
-impl Credentials{
-    pub fn new(cid: String) -> Credentials{
-        Credentials{
+impl Credentials {
+    pub fn new(cid: String) -> Credentials {
+        Credentials {
             client_id: cid.clone(),
             token: None,
         }
     }
 
-    pub fn set_from_file(&mut self, file: String){
-        let file_content = match fs::read_to_string(file){
+    pub fn set_from_file(&mut self, file: String) {
+        let file_content = match fs::read_to_string(file) {
             Ok(s) => s,
-            Err(e) => panic!("There was a problem reading the file: {:?}", e)
+            Err(e) => panic!("There was a problem reading the file: {:?}", e),
         };
-        match toml::from_str::<Credentials>(&file_content){
+        match toml::from_str::<Credentials>(&file_content) {
             Ok(cred) => {
                 self.client_id = cred.client_id;
                 self.token = cred.token
-            },
+            }
             Err(e) => panic!("There was a problem parsing the toml file: {:?}", e),
         }
     }
 
-    pub fn write_to_file(&self, file: String){
+    pub fn write_to_file(&self, file: String) {
         let content = toml::to_string(self).unwrap();
         fs::write(file, content).expect("Error writing toml file");
     }
 }
-
 
 #[derive(Debug)]
 pub struct TwitchClient {
@@ -124,7 +123,6 @@ pub fn new(clientid: String) -> TwitchClient {
 }
 
 impl TwitchClient {
-
     fn build_request<'a, F>(&self, path: &str, build: F) -> RequestBuilder<'a>
     where
         F: Fn(&str) -> RequestBuilder<'a>,
