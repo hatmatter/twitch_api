@@ -15,7 +15,7 @@
 // (Modifications|Other (data|code)|Everything else) Copyright 2019 the libtwitch-rs authors.
 //  See copying.md for further legal info.
 
-//! # Twitch API
+//! # libtwitch-rs
 //!
 //! Rust library for interacting with the Twitch API:
 //! https://dev.twitch.tv/docs/
@@ -23,11 +23,11 @@
 //! # Examples
 //!
 //! ```
-//! extern crate twitch_api;
+//! extern crate libtwitch_rs;
 //!
-//! use twitch_api::games;
+//! use libtwitch_rs::games;
 //!
-//! let c = twitch_api::new("<clientid>".to_owned());
+//! let c = libtwitch_rs::new("<clientid>".to_owned());
 //! // Print the name of the top 20 games
 //! if let Ok(games) = games::TopGames::get(&c) {
 //!     for entry in games.take(20) {
@@ -75,30 +75,31 @@ use std::io::{stderr, Read};
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Credentials {
-    client_id: String,
-    // add when channel_ids are a thing
-    // channel_id: String,
-    token: Option<String>,
+    pub client_id: String,
+    // pub channel_id: String,
+    pub token: Option<String>,
 }
 
 impl Credentials {
-    pub fn new(cid: String) -> Credentials {
+    pub fn new(clid: String) -> Credentials {
         Credentials {
-            client_id: cid.clone(),
+            client_id: clid.clone(),
+            //channel_id: None,
             token: None,
         }
     }
 
-    pub fn set_from_file(&mut self, file: String) {
+    pub fn set_from_file(file: String) -> Credentials {
         let file_content = match fs::read_to_string(file) {
             Ok(s) => s,
             Err(e) => panic!("There was a problem reading the file: {:?}", e),
         };
         match toml::from_str::<Credentials>(&file_content) {
-            Ok(cred) => {
-                self.client_id = cred.client_id;
-                self.token = cred.token
-            }
+            Ok(cred) => Credentials {
+                client_id: cred.client_id,
+                //channel_id: cred.channel_id,
+                token: cred.token,
+            },
             Err(e) => panic!("There was a problem parsing the toml file: {:?}", e),
         }
     }
