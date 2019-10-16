@@ -33,7 +33,7 @@ use std::io::Write;
 /// #### Authentication: `None`
 ///
 pub fn get(c: &TwitchClient, video_id: &str) -> TwitchResult<Video> {
-    let r = r#try!(c.get::<Video>(&format!("/videos/{}", video_id)));
+    let r = c.get::<Video>(&format!("/videos/{}", video_id))?;
     Ok(r)
 }
 
@@ -53,8 +53,8 @@ pub fn top<'c>(
     };
     let iter = TopVideoIterator {
         client: c,
-        game: game,
-        period: period,
+        game,
+        period,
         cur: None,
         offset: 0,
     };

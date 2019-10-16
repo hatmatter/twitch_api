@@ -74,13 +74,13 @@ impl Error for ApiError {
         }
     }
 
-    fn cause(&self) -> Option<&Error> {
+    fn cause(&self) -> Option<&dyn Error> {
         Some(match *self {
-            ApiError::HyperErr(ref err) => err as &Error,
-            ApiError::IoError(ref err) => err as &Error,
-            ApiError::ParseError(ref err) => err as &Error,
-            ApiError::TwitchError(ref err) => err as &Error,
-            ApiError::EmptyResponse(ref err) => err as &Error,
+            ApiError::HyperErr(ref err) => err as &dyn Error,
+            ApiError::IoError(ref err) => err as &dyn Error,
+            ApiError::ParseError(ref err) => err as &dyn Error,
+            ApiError::TwitchError(ref err) => err as &dyn Error,
+            ApiError::EmptyResponse(ref err) => err as &dyn Error,
         })
     }
 }
@@ -124,9 +124,9 @@ impl Error for ErrorResponse {
         &self.error
     }
 
-    fn cause(&self) -> Option<&Error> {
+    fn cause(&self) -> Option<&dyn Error> {
         if let Some(ref cause) = self.cause {
-            return Some(cause.as_ref());
+            Some(cause.as_ref())
         } else {
             None
         }
@@ -150,7 +150,7 @@ impl Error for EmptyResponse {
         "EmptyResponse"
     }
 
-    fn cause(&self) -> Option<&Error> {
+    fn cause(&self) -> Option<&dyn Error> {
         None
     }
 }

@@ -31,7 +31,7 @@ use super::TwitchClient;
 /// #### Authentication: `None`
 ///
 pub fn servers(c: &TwitchClient) -> TwitchResult<IngestServerList> {
-    let r = r#try!(c.get::<IngestServerList>("/ingests"));
+    let r = c.get::<IngestServerList>("/ingests")?;
     Ok(r)
 }
 

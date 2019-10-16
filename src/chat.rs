@@ -25,7 +25,7 @@ use super::TwitchClient;
 /// #### Authentication: `None`
 ///
 pub fn get_badges(c: &TwitchClient, chan_id: &str) -> TwitchResult<BadgeSet> {
-    let r = r#try!(c.get::<BadgeSet>(&format!("/chat/{}/badges", chan_id)));
+    let r = c.get::<BadgeSet>(&format!("/chat/{}/badges", chan_id))?;
     Ok(r)
 }
 
@@ -38,10 +38,10 @@ pub fn get_badges(c: &TwitchClient, chan_id: &str) -> TwitchResult<BadgeSet> {
 /// this endpoint returns a large amount of data.
 ///
 pub fn get_emote_sets(c: &TwitchClient, sets: &[&str]) -> TwitchResult<EmotesBySet> {
-    let r = r#try!(c.get::<EmotesBySet>(&format!(
+    let r = c.get::<EmotesBySet>(&format!(
         "/chat/emoticon_images?emotesets={}",
         sets.join(",")
-    )));
+    ))?;
     Ok(r)
 }
 
@@ -53,7 +53,7 @@ pub fn get_emote_sets(c: &TwitchClient, sets: &[&str]) -> TwitchResult<EmotesByS
 /// Caution: This endpoint returns a large amount of data.
 ///
 pub fn get_emotes(c: &TwitchClient) -> TwitchResult<ChatEmotes> {
-    let r = r#try!(c.get::<ChatEmotes>("/chat/emoticons"));
+    let r = c.get::<ChatEmotes>("/chat/emoticons")?;
     Ok(r)
 }
 

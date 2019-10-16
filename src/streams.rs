@@ -34,7 +34,7 @@ use super::TwitchClient;
 /// #### Authentication: `None`
 ///
 pub fn get(c: &TwitchClient, chan_id: &str) -> TwitchResult<StreamByUser> {
-    let r = r#try!(c.get::<StreamByUser>(&format!("/streams/{}", chan_id)));
+    let r = c.get::<StreamByUser>(&format!("/streams/{}", chan_id))?;
     Ok(r)
 }
 
@@ -57,8 +57,8 @@ pub fn live<'c>(
         client: c,
         cur: None,
         channel: channels,
-        game: game,
-        language: language,
+        game,
+        language,
         offset: 0,
     };
     Ok(iter)
@@ -74,7 +74,7 @@ pub fn summary(c: &TwitchClient, game: Option<&str>) -> TwitchResult<Summary> {
         url.push_str("?game=");
         url.push_str(game);
     }
-    let r = r#try!(c.get::<Summary>(&url));
+    let r = c.get::<Summary>(&url)?;
     Ok(r)
 }
 
@@ -98,12 +98,10 @@ pub fn featured<'c>(c: &'c TwitchClient) -> TwitchResult<FeaturedIterator<'c>> {
 ///
 pub fn followed(c: &TwitchClient) -> TwitchResult<FollowedStreams> {
     let mut lst = Vec::new();
-    let mut r = r#try!(c.get::<FollowedStreams>("/streams/followed?limit=100"));
+    let mut r = c.get::<FollowedStreams>("/streams/followed?limit=100")?;
     lst.append(&mut r._streams);
     while let Some(cursor) = r._cursor {
-        r = r#try!(
-            c.get::<FollowedStreams>(&format!("/streams/followsed?cursor={}&limit=100", cursor))
-        );
+        r = c.get::<FollowedStreams>(&format!("/streams/followsed?cursor={}&limit=100", cursor))?;
         lst.append(&mut r._streams);
     }
     r.streams = lst;
@@ -233,7 +231,7 @@ impl<'c> Iterator for FeaturedIterator<'c> {
         if cnt == 0 {
             self.cur = None;
         }
-        return x;
+        x
     }
 }
 

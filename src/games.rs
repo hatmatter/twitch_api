@@ -29,7 +29,7 @@ use super::TwitchClient;
 ///
 /// #### Authentication: `None`
 ///
-pub fn top<'c>(c: &'c TwitchClient) -> TwitchResult<TopGames<'c>> {
+pub fn top(c: &TwitchClient) -> TwitchResult<TopGames> {
     let iter = TopGames {
         client: c,
         cur: None,

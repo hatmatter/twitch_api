@@ -68,7 +68,6 @@ use hyper::Client;
 
 use serde::de::Deserialize;
 use serde::Serialize;
-use std::env;
 use std::fs;
 use std::io::Write;
 use std::io::{stderr, Read};
@@ -77,7 +76,7 @@ use std::io::{stderr, Read};
 pub struct Credentials {
     pub client_id: String,
     // pub channel_id: String,
-    pub token: Option<String>,
+    pub token: String,
 }
 
 impl Credentials {
@@ -85,7 +84,7 @@ impl Credentials {
         Credentials {
             client_id: clid.clone(),
             //channel_id: None,
-            token: None,
+            token: "".to_string(),
         }
     }
 
@@ -142,23 +141,24 @@ impl TwitchClient {
             SubLevel::Json,
             vec![(Attr::Charset, Value::Utf8)],
         )));
-        if let Some(ref token) = self.cred.token {
-            headers.set(Authorization(format!("OAuth {}", token)));
-        }
+
+        headers.set(Authorization(format!("OAuth {}", self.cred.token)));
 
         build(&url).headers(headers)
     }
 
     pub fn set_oauth_token(&mut self, token: &str) {
-        self.cred.token = Some(String::from(token));
+        self.cred.token = String::from(token);
     }
 
     pub fn get<T: Deserialize>(&self, path: &str) -> TwitchResult<T> {
-        let mut r = r#try!(self.build_request(path, |url| self.client.get(url)).send());
+        let mut r = self
+            .build_request(path, |url| self.client.get(url))
+            .send()?;
         let mut s = String::new();
-        let _ = r#try!(r.read_to_string(&mut s));
+        let _ = r.read_to_string(&mut s)?;
         if s.len() == 0 {
-            return Err(ApiError::empty_response());
+            Err(ApiError::empty_response())
         } else {
             match serde_json::from_str(&s) {
                 Ok(x) => Ok(x),
@@ -179,14 +179,14 @@ impl TwitchClient {
         T: Serialize,
         R: Deserialize,
     {
-        let mut r = r#try!(self
+        let mut r = self
             .build_request(path, |url| self.client.post(url))
-            .body(&r#try!(serde_json::to_string(data)))
-            .send());
+            .body(&serde_json::to_string(data)?)
+            .send()?;
         let mut s = String::new();
-        let _ = r#try!(r.read_to_string(&mut s));
+        let _ = r.read_to_string(&mut s)?;
         if s.len() == 0 {
-            return Err(ApiError::empty_response());
+            Err(ApiError::empty_response())
         } else {
             match serde_json::from_str(&s) {
                 Ok(x) => Ok(x),
@@ -207,14 +207,14 @@ impl TwitchClient {
         T: Serialize,
         R: Deserialize,
     {
-        let mut r = r#try!(self
+        let mut r = self
             .build_request(path, |url| self.client.put(url))
-            .body(&r#try!(serde_json::to_string(data)))
-            .send());
+            .body(&serde_json::to_string(data)?)
+            .send()?;
         let mut s = String::new();
-        let _ = r#try!(r.read_to_string(&mut s));
+        let _ = r.read_to_string(&mut s)?;
         if s.len() == 0 {
-            return Err(ApiError::empty_response());
+            Err(ApiError::empty_response())
         } else {
             match serde_json::from_str(&s) {
                 Ok(x) => Ok(x),
@@ -231,13 +231,13 @@ impl TwitchClient {
     }
 
     pub fn delete<T: Deserialize>(&self, path: &str) -> TwitchResult<T> {
-        let mut r = r#try!(self
+        let mut r = self
             .build_request(path, |url| self.client.delete(url))
-            .send());
+            .send()?;
         let mut s = String::new();
-        let _ = r#try!(r.read_to_string(&mut s));
+        let _ = r.read_to_string(&mut s)?;
         if s.len() == 0 {
-            return Err(ApiError::empty_response());
+            Err(ApiError::empty_response())
         } else {
             match serde_json::from_str(&s) {
                 Ok(x) => Ok(x),

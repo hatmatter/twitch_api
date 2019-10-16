@@ -60,10 +60,10 @@ pub fn games<'c>(
     query: &str,
     live_only: bool,
 ) -> TwitchResult<SearchGameIterator<'c>> {
-    let iter = SearchGameIterator {
+    let iter: SearchGameIterator = SearchGameIterator {
         client: c,
         query: quote(query, b"").ok().unwrap(),
-        live_only: live_only,
+        live_only,
         cur: None,
         offset: 0,
     };
@@ -86,7 +86,7 @@ pub fn streams<'c>(
     let iter = SearchStreamIterator {
         client: c,
         query: quote(query, b"").ok().unwrap(),
-        protocol: protocol,
+        protocol,
         cur: None,
         offset: 0,
     };
@@ -174,10 +174,10 @@ impl<'c> Iterator for SearchStreamIterator<'c> {
     type Item = Stream;
 
     fn next(&mut self) -> Option<Stream> {
-        let mut path = String::from(format!(
+        let mut path = format!(
             "/search/streams?query={}&limit=100&offset={}",
             self.query, self.offset
-        ));
+        );
         path = match self.protocol {
             Some(Protocol::HLS) => path + "&hls=true",
             Some(Protocol::RTMP) => path + "&hls=false",

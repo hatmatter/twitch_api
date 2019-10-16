@@ -46,7 +46,7 @@ pub fn get_all<'c>(c: &'c TwitchClient) -> TwitchResult<TeamIterator<'c>> {
 /// #### Authentication: `None`
 ///
 pub fn get(c: &TwitchClient, team_name: &str) -> TwitchResult<Team> {
-    let r = r#try!(c.get::<Team>(&format!("/teams/{}", team_name)));
+    let r = c.get::<Team>(&format!("/teams/{}", team_name))?;
     Ok(r)
 }
 
