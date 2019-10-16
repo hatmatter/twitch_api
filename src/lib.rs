@@ -336,6 +336,8 @@ pub mod auth {
 }
 
 #[cfg(test)]
+#[macro_use]
+extern crate pretty_assertions;
 mod tests {
     pub const CLIENTID: &'static str = "";
     pub const TOKEN: &'static str = "";

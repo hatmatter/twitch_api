@@ -128,6 +128,7 @@ mod tests {
     }
 
     #[test]
+    #[cfg_attr(not(feature = "expensive_tests"), ignore)]
     fn get_emote_sets() {
         let c = new(String::from(CLIENTID));
 
@@ -141,6 +142,7 @@ mod tests {
     }
 
     #[test]
+    #[cfg_attr(not(feature = "expensive_tests"), ignore)]
     fn get_emotes() {
         let c = new(String::from(CLIENTID));
 

@@ -423,7 +423,7 @@ mod tests {
 
     #[test]
     fn get_by_id() {
-        let mut c = new(String::from(CLIENTID));
+        let c = new(String::from(CLIENTID));
 
         match super::get_by_id(&c, CHANID) {
             Ok(r) => assert_eq!(&r.id.to_string(), CHANID),
