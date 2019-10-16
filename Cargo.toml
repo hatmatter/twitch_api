@@ -46,3 +46,8 @@ urlparse = "0.7.3"
 [dev-dependencies]
 lazy_static = "1.4.0"
 pretty_assertions = "0.4.0"
+
+[package.metadata.release]
+upload-doc = true
+no-dev-version = true
+pre-release-commit-message = "Release {{crate_name}} {{version}} / {{date}}"
