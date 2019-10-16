@@ -5,10 +5,33 @@ edition = "2018"
 authors = ["the libtwitch-rs authors"]
 description = "Rust library for the Twitch API"
 repository = "https://github.com/simonsan/libtwitch-rs"
+documentation = "https://docs.rs/libtwitch-rs/"
 readme = "README.md"
 keywords = ["twitch", "api"]
 categories = ["api-bindings"]
-license = "AGPL-3.0"
+license = "AGPL-3.0-or-later"
+maintenance = { status = "actively-developed" }
+
+include = [
+    "src/**/*",
+    "tests/**/*",
+    "Cargo.toml",
+    "tests/example_credentials.toml",
+    "License",
+    "legal/*",
+    "copying.md",
+    "Readme.md",
+]
+exclude = [
+    "credentials.toml",
+]
+
+[lib]
+name = "libtwitch_rs"
+crate-type = ["dylib", "staticlib", "cdylib", "rlib"]
+path = "src/lib.rs"
+test = true
+doc = true
 
 [dependencies]
 chrono = { version = "0.3", features = ["serde", "rustc-serialize"] }

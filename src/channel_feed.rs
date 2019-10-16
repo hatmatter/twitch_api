@@ -378,6 +378,7 @@ mod tests {
     use super::*;
 
     #[test]
+    #[ignore]
     fn post() {
         let mut c = new(String::from(CLIENTID));
         c.set_oauth_token(TOKEN);

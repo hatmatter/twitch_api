@@ -31,6 +31,14 @@ if let Some(user) = match users::get(&c) {
 }
 ```
 
+# Useful Links
+
+- [Token generator](https://twitchtokengenerator.com/)
+- [Token test, infos incl. Channel_ID](https://codepen.io/Alca/pen/VwwazOK)
+- [Achieve Authorization for a bot](http://web.archive.org/web/20191016034229/https://d-fischer.github.io/twitch-chat-client/docs/examples/basic-bot.html)
+- [Twitch API GUide](https://dev.twitch.tv/docs/api/guide)
+
+
 # License
 GNU AGPL-3.0-or-later; see [copying.md](copying.md) and [legal/AGPL-v3](legal/AGPL-v3).
 
