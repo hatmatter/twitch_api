@@ -1,6 +1,6 @@
 [package]
 name = "libtwitch-rs"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2018"
 authors = ["the libtwitch-rs authors"]
 description = "Rust library for the Twitch API"
