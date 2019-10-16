@@ -4,18 +4,18 @@ A Rust library for the Twitch API.
 # Contributing
 Help for this project is highly appreciated. This was built against an older version of the Twitch API. 
 Some updates are necessary to work with the latest version of the API. 
-Take a look into the Issues if you want to contribute to the project.
+Take a look into the [issues](https://github.com/simonsan/libtwitch-rs/issues) if you want to contribute to the project.
 
 Fork it, implement your changes and make a Pull-Request against the `feature-dev` branch of this repo. 
 
 # Usage
 ```
-use twitch_api;
-use twitch_api::users;
+use libtwitch_rs;
+use libtwitch_rs::users;
 
 ...
 
-let mut c = twitch_api::new(String::from(CLIENTID));
+let mut c = libtwitch_rs::new(String::from(CLIENTID));
 c.set_oauth_token(TOKEN);
 
 if let Some(user) = match users::get(&c) {
