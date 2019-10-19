@@ -12,10 +12,10 @@ jobs:
       - name: Checkout sources
         uses: actions/checkout@v1
 
-      - name: Install stable toolchain
+      - name: Install nightly toolchain
         uses: actions-rs/toolchain@v1
         with:
-          toolchain: stable
+          toolchain: nightly
           override: true
 
       - name: Run cargo check
@@ -30,10 +30,10 @@ jobs:
       - name: Checkout sources
         uses: actions/checkout@v1
 
-      - name: Install stable toolchain
+      - name: Install nightly toolchain
         uses: actions-rs/toolchain@v1
         with:
-          toolchain: stable
+          toolchain: nightly
           override: true
 
       - name: Run cargo test
@@ -49,14 +49,13 @@ jobs:
       - name: Checkout sources
         uses: actions/checkout@v1
 
-      - name: Install stable toolchain
+      - name: Install nightly toolchain with rustfmt available
         uses: actions-rs/toolchain@v1
         with:
-          toolchain: stable
+          profile: minimal
+          toolchain: nightly
           override: true
-
-      - name: Install rustfmt
-        run: rustup component add rustfmt
+          components: rustfmt
 
       - name: Run cargo fmt
         uses: actions-rs/cargo@v1
@@ -71,14 +70,13 @@ jobs:
       - name: Checkout sources
         uses: actions/checkout@v1
 
-      - name: Install stable toolchain
+      - name: Install nightly toolchain with clippy available
         uses: actions-rs/toolchain@v1
         with:
-          toolchain: stable
+          profile: minimal
+          toolchain: nightly
           override: true
-
-      - name: Install clippy
-        run: rustup component add clippy
+          components: clippy
 
       - name: Run cargo clippy
         uses: actions-rs/cargo@v1
