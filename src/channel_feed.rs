@@ -489,6 +489,7 @@ mod tests {
 	}
 
 	#[test]
+	#[ignore]
 	fn comment() {
 		let mut c = new(String::from(CLIENTID));
 		c.set_oauth_token(TOKEN);

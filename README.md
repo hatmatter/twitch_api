@@ -31,12 +31,43 @@ if let Some(user) = match users::get(&c) {
 }
 ```
 
-# Useful Links
+# Supported API versions
 
-- [Token generator](https://twitchtokengenerator.com/)
+Endpoints         | Kraken/v5          |  Helix/v6 [WIP]  |
+:----------------:|:------------------:|:----------------:|
+Analytics         | :heavy_minus_sign: | :x:              |
+Bits              | :heavy_check_mark: | :x:              |
+Channels          | :heavy_check_mark: | :x:              |
+Chat              | :heavy_check_mark: | :x:              |
+Clips             | :heavy_check_mark: | :x:              |
+Collections       | :heavy_check_mark: | :x:              |
+Entitlements      | :heavy_minus_sign: | :x:              |
+Games             | :heavy_check_mark: | :x:              |
+Ingests           | :heavy_check_mark: | :x:              |
+Search            | :heavy_check_mark: | :x:              |
+Streams           | :heavy_check_mark: | :x:              |
+Tags              | :heavy_minus_sign: | :x:              |
+Teams             | :heavy_check_mark: | :x:              |
+Users             | :heavy_check_mark: | :x:              |
+Videos            | :heavy_check_mark: | :x:              |
+Webhooks          | :heavy_minus_sign: | :x:              |
+
+
+# Links
+## Helpful Documentation
 - [Token test, infos incl. Channel_ID](https://codepen.io/Alca/pen/VwwazOK)
 - [Achieve Authorization for a bot](http://web.archive.org/web/20191016034229/https://d-fischer.github.io/twitch-chat-client/docs/examples/basic-bot.html)
-- [Twitch API GUide](https://dev.twitch.tv/docs/api/guide)
+- [Twitch API Guide](https://dev.twitch.tv/docs/api/guide)
+
+## Token Generation
+- [Token generator](https://twitchtokengenerator.com/)
+- [Twitch IRC OAuth generator](https://twitchapps.com/tmi/)
+
+## Repositories:
+- [Twitch library (C#)](https://github.com/TwitchLib/TwitchLib)
+- [Twitch library (PHP)](https://github.com/Dkamps18/PHP-Twitch-lib/)
+- [Python Twitch client](https://github.com/tsifrer/python-twitch-client)
+- [TwitchIO, Twtich Bot/API wrapper (Python)](https://github.com/TwitchIO/TwitchIO)
 
 
 # License
