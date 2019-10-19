@@ -12,37 +12,46 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// (Modifications|Other (data|code)|Everything else) Copyright 2019 the libtwitch-rs authors.
-//  See copying.md for further legal info.
+// (Modifications|Other (data|code)|Everything else) Copyright 2019 the
+// libtwitch-rs authors.  See copying.md for further legal info.
 
 use std::collections::HashMap;
 
-use super::response::TwitchResult;
-use super::TwitchClient;
+use super::{
+	response::TwitchResult,
+	TwitchClient,
+};
 
 /// Gets a list of badges that can be used in chat for a specified channel
 ///
 /// #### Authentication: `None`
-///
-pub fn get_badges(c: &TwitchClient, chan_id: &str) -> TwitchResult<BadgeSet> {
-    let r = c.get::<BadgeSet>(&format!("/chat/{}/badges", chan_id))?;
-    Ok(r)
+pub fn get_badges(
+	c: &TwitchClient,
+	chan_id: &str,
+) -> TwitchResult<BadgeSet>
+{
+	let r = c.get::<BadgeSet>(&format!("/chat/{}/badges", chan_id))?;
+	Ok(r)
 }
 
-/// Gets all chat emoticons (not including their images) in one or more specified sets
+/// Gets all chat emoticons (not including their images) in one or more
+/// specified sets
 ///
 /// #### Authentication: `None`
 ///
 /// # Remarks
 /// Caution: When not specifying the emotesets parameter,
 /// this endpoint returns a large amount of data.
-///
-pub fn get_emote_sets(c: &TwitchClient, sets: &[&str]) -> TwitchResult<EmotesBySet> {
-    let r = c.get::<EmotesBySet>(&format!(
-        "/chat/emoticon_images?emotesets={}",
-        sets.join(",")
-    ))?;
-    Ok(r)
+pub fn get_emote_sets(
+	c: &TwitchClient,
+	sets: &[&str],
+) -> TwitchResult<EmotesBySet>
+{
+	let r = c.get::<EmotesBySet>(&format!(
+		"/chat/emoticon_images?emotesets={}",
+		sets.join(",")
+	))?;
+	Ok(r)
 }
 
 /// Gets all chat emoticons (including their images)
@@ -51,10 +60,9 @@ pub fn get_emote_sets(c: &TwitchClient, sets: &[&str]) -> TwitchResult<EmotesByS
 ///
 /// # Remarks
 /// Caution: This endpoint returns a large amount of data.
-///
 pub fn get_emotes(c: &TwitchClient) -> TwitchResult<ChatEmotes> {
-    let r = c.get::<ChatEmotes>("/chat/emoticons")?;
-    Ok(r)
+	let r = c.get::<ChatEmotes>("/chat/emoticons")?;
+	Ok(r)
 }
 
 ///////////////////////////////////////
@@ -64,9 +72,9 @@ pub type BadgeSet = HashMap<String, Option<Badge>>;
 
 #[derive(Deserialize, Debug)]
 pub struct Badge {
-    pub alpha: String,
-    pub image: String,
-    pub svg: String,
+	pub alpha: String,
+	pub image: String,
+	pub svg: String,
 }
 
 ///////////////////////////////////////
@@ -74,13 +82,13 @@ pub struct Badge {
 ///////////////////////////////////////
 #[derive(Deserialize, Debug)]
 pub struct EmotesBySet {
-    pub emoticon_sets: HashMap<String, Vec<EmoteSet>>,
+	pub emoticon_sets: HashMap<String, Vec<EmoteSet>>,
 }
 
 #[derive(Deserialize, Debug)]
 pub struct EmoteSet {
-    pub id: i64,
-    pub code: String,
+	pub id: i64,
+	pub code: String,
 }
 
 ///////////////////////////////////////
@@ -88,21 +96,21 @@ pub struct EmoteSet {
 ///////////////////////////////////////
 #[derive(Deserialize, Debug)]
 pub struct ChatEmotes {
-    pub emoticons: Vec<ChatEmote>,
+	pub emoticons: Vec<ChatEmote>,
 }
 
 #[derive(Deserialize, Debug)]
 pub struct ChatEmote {
-    pub regex: String,
-    pub images: Vec<ChatEmoteImage>,
+	pub regex: String,
+	pub images: Vec<ChatEmoteImage>,
 }
 
 #[derive(Deserialize, Debug)]
 pub struct ChatEmoteImage {
-    pub width: i32,
-    pub height: i32,
-    pub url: String,
-    pub emoticon_set: Option<i64>,
+	pub width: i32,
+	pub height: i32,
+	pub url: String,
+	pub emoticon_set: Option<i64>,
 }
 
 ///////////////////////////////////////
@@ -111,47 +119,49 @@ pub struct ChatEmoteImage {
 
 #[cfg(test)]
 mod tests {
-    use super::super::new;
-    use super::super::tests::CLIENTID;
+	use super::super::{
+		new,
+		tests::CLIENTID,
+	};
 
-    #[test]
-    fn get_badges() {
-        let c = new(String::from(CLIENTID));
+	#[test]
+	fn get_badges() {
+		let c = new(String::from(CLIENTID));
 
-        match super::get_badges(&c, "12826") {
-            Ok(r) => assert!(r.contains_key("global_mod")),
-            Err(r) => {
-                println!("{:?}", r);
-                assert!(false);
-            }
-        }
-    }
+		match super::get_badges(&c, "12826") {
+			Ok(r) => assert!(r.contains_key("global_mod")),
+			Err(r) => {
+				println!("{:?}", r);
+				assert!(false);
+			}
+		}
+	}
 
-    #[test]
-    #[cfg_attr(not(feature = "expensive_tests"), ignore)]
-    fn get_emote_sets() {
-        let c = new(String::from(CLIENTID));
+	#[test]
+	#[cfg_attr(not(feature = "expensive_tests"), ignore)]
+	fn get_emote_sets() {
+		let c = new(String::from(CLIENTID));
 
-        match super::get_emote_sets(&c, &["19151"]) {
-            Ok(r) => assert!(r.emoticon_sets.contains_key("19151")),
-            Err(r) => {
-                println!("{:?}", r);
-                assert!(false);
-            }
-        }
-    }
+		match super::get_emote_sets(&c, &["19151"]) {
+			Ok(r) => assert!(r.emoticon_sets.contains_key("19151")),
+			Err(r) => {
+				println!("{:?}", r);
+				assert!(false);
+			}
+		}
+	}
 
-    #[test]
-    #[cfg_attr(not(feature = "expensive_tests"), ignore)]
-    fn get_emotes() {
-        let c = new(String::from(CLIENTID));
+	#[test]
+	#[cfg_attr(not(feature = "expensive_tests"), ignore)]
+	fn get_emotes() {
+		let c = new(String::from(CLIENTID));
 
-        match super::get_emotes(&c) {
-            Ok(r) => assert!(r.emoticons.len() > 0),
-            Err(r) => {
-                println!("{:?}", r);
-                assert!(false);
-            }
-        }
-    }
+		match super::get_emotes(&c) {
+			Ok(r) => assert!(r.emoticons.len() > 0),
+			Err(r) => {
+				println!("{:?}", r);
+				assert!(false);
+			}
+		}
+	}
 }
