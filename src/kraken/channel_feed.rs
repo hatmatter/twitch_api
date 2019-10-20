@@ -20,9 +20,10 @@ extern crate serde_json;
 
 use self::chrono::prelude::*;
 
-use super::{
+use super::users::User;
+
+use crate::{
 	response::TwitchResult,
-	users::User,
 	TwitchClient,
 };
 
@@ -397,15 +398,26 @@ impl<'c> Iterator for FeedPostCommentIterator<'c> {
 
 #[cfg(test)]
 mod tests {
-	use super::super::new;
-
-	use super::super::tests::{
-		CHANID,
-		CLIENTID,
-		TOKEN,
+	use crate::{
+		new,
+		tests::{
+			CHANID,
+			CLIENTID,
+			TOKEN,
+		},
 	};
 
-	use super::*;
+	use crate::kraken::channel_feed::{
+		delete_comment,
+		delete_comment_reaction,
+		delete_post,
+		delete_post_reaction,
+		get_posts,
+		new_comment,
+		new_comment_reaction,
+		new_post,
+		new_post_reaction,
+	};
 
 	#[test]
 	#[ignore]

@@ -23,6 +23,9 @@ use self::chrono::prelude::*;
 use super::{
 	channels::Channel,
 	chat::EmotesBySet,
+};
+
+use crate::{
 	response::{
 		ApiError,
 		TwitchResult,
@@ -172,7 +175,7 @@ pub fn unfollow(
 		user_id, chan_id
 	));
 	match r {
-		Ok(_) => Ok(assert!(false)), // this should never happen
+		Ok(_) => unreachable!(), // this should never happen
 		Err(r) => match r {
 			ApiError::EmptyResponse(_) => Ok(()),
 			_ => Err(r),
@@ -233,7 +236,7 @@ pub fn unblock(
 		src_user_id, tgt_user_id
 	));
 	match r {
-		Ok(_) => Ok(assert!(false)), // this should never happen
+		Ok(_) => unreachable!(), // this should never happen
 		Err(r) => match r {
 			ApiError::EmptyResponse(_) => Ok(()),
 			_ => Err(r),
@@ -336,7 +339,7 @@ impl<'c> Iterator for UserBlockIterator<'c> {
 
 #[cfg(test)]
 mod tests {
-	use super::super::{
+	use crate::{
 		new,
 		response::ApiError,
 		tests::{

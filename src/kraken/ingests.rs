@@ -18,7 +18,7 @@
 extern crate chrono;
 extern crate serde_json;
 
-use super::{
+use super::super::{
 	response::TwitchResult,
 	TwitchClient,
 };
@@ -59,7 +59,7 @@ pub struct IngestServer {
 
 #[cfg(test)]
 mod tests {
-	use super::super::{
+	use crate::{
 		new,
 		tests::CLIENTID,
 	};

@@ -18,9 +18,10 @@
 extern crate chrono;
 extern crate serde_json;
 
-use super::{
+use super::users::User;
+
+use crate::{
 	response::TwitchResult,
-	users::User,
 	TwitchClient,
 };
 
@@ -413,7 +414,7 @@ impl<'c> Iterator for TopCommunities<'c> {
 	type Item = TopCommunity;
 
 	fn next(&mut self) -> Option<TopCommunity> {
-		let url = format!("/communities/top?");
+		let url = "/communities/top?".to_string();
 		next_result_cursor!(self, &url, SerdeTopCommunities, communities)
 	}
 }

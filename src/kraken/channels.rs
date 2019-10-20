@@ -22,9 +22,12 @@ use self::chrono::prelude::*;
 
 use super::{
 	communities::Community,
-	response::TwitchResult,
 	users::User,
 	videos::Video,
+};
+
+use crate::{
+	response::TwitchResult,
 	TwitchClient,
 };
 
@@ -443,7 +446,7 @@ impl<'c> Iterator for VideosIterator<'c> {
 
 #[cfg(test)]
 mod tests {
-	use super::super::{
+	use crate::{
 		new,
 		response::ApiError,
 		tests::{

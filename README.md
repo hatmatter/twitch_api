@@ -33,24 +33,26 @@ if let Some(user) = match users::get(&c) {
 
 # Supported API versions
 
-Endpoints         | Kraken/v5          |  Helix/v6 [WIP]  |
-:----------------:|:------------------:|:----------------:|
-Analytics         | :heavy_minus_sign: | :x:              |
-Bits              | :heavy_check_mark: | :x:              |
-Channels          | :heavy_check_mark: | :x:              |
-Chat              | :heavy_check_mark: | :x:              |
-Clips             | :heavy_check_mark: | :x:              |
-Collections       | :heavy_check_mark: | :x:              |
-Entitlements      | :heavy_minus_sign: | :x:              |
-Games             | :heavy_check_mark: | :x:              |
-Ingests           | :heavy_check_mark: | :x:              |
-Search            | :heavy_check_mark: | :x:              |
-Streams           | :heavy_check_mark: | :x:              |
-Tags              | :heavy_minus_sign: | :x:              |
-Teams             | :heavy_check_mark: | :x:              |
-Users             | :heavy_check_mark: | :x:              |
-Videos            | :heavy_check_mark: | :x:              |
-Webhooks          | :heavy_minus_sign: | :x:              |
+Endpoints         | Kraken/v5          |  Helix/v6 [WIP]    |
+:----------------:|:------------------:|:------------------:|
+Analytics         | :heavy_minus_sign: | :x:                |
+Bits              | :heavy_check_mark: | :x:                |
+Channels          | :heavy_check_mark: | :heavy_minus_sign: |
+Chat              | :heavy_check_mark: | :heavy_minus_sign: |
+Clips             | :heavy_check_mark: | :x:                |
+Collections       | :heavy_check_mark: | :heavy_minus_sign: |
+Entitlements      | :heavy_minus_sign: | :x:                |
+Games             | :heavy_check_mark: | :x:                |
+Ingests           | :heavy_check_mark: | :heavy_minus_sign: |
+Moderation        | :heavy_minus_sign: | :x:                |
+Search            | :heavy_check_mark: | :heavy_minus_sign: |
+Streams           | :heavy_check_mark: | :x:                |
+Subscriptions     | :heavy_minus_sign: | :x:                |
+Tags              | :heavy_minus_sign: | :x:                |
+Teams             | :heavy_check_mark: | :heavy_minus_sign: |
+Users             | :heavy_check_mark: | :x:                |
+Videos            | :heavy_check_mark: | :x:                |
+Webhooks          | :heavy_minus_sign: | :x:                |
 
 
 # Links

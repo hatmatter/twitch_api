@@ -29,8 +29,11 @@ use self::urlparse::quote;
 use super::{
 	channels::Channel,
 	games::Game,
-	response::TwitchResult,
 	streams::Stream,
+};
+
+use crate::{
+	response::TwitchResult,
 	TwitchClient,
 };
 
@@ -199,7 +202,7 @@ impl<'c> Iterator for SearchStreamIterator<'c> {
 ///////////////////////////////////////
 #[cfg(test)]
 mod tests {
-	use super::super::{
+	use crate::{
 		new,
 		response,
 		tests::CLIENTID,

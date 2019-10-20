@@ -17,26 +17,23 @@
 
 extern crate chrono;
 extern crate serde_json;
-extern crate urlparse;
 
 use std::{
 	self,
+	collections::HashMap,
 	io::Write,
 };
 
-use self::chrono::prelude::*;
-
-use super::{
+use super::super::{
 	response::TwitchResult,
-	users::User,
 	TwitchClient,
 };
 
-/// Gets all active teams
+/// Gets games sorted by number of current viewers on Twitch, most popular first
 ///
 /// #### Authentication: `None`
-pub fn get_all<'c>(c: &'c TwitchClient) -> TwitchResult<TeamIterator<'c>> {
-	let iter = TeamIterator {
+pub fn top(c: &TwitchClient) -> TwitchResult<TopGames> {
+	let iter = TopGames {
 		client: c,
 		cur: None,
 		offset: 0,
@@ -44,53 +41,45 @@ pub fn get_all<'c>(c: &'c TwitchClient) -> TwitchResult<TeamIterator<'c>> {
 	Ok(iter)
 }
 
-/// Gets a specified team object
-///
-/// #### Authentication: `None`
-pub fn get(
-	c: &TwitchClient,
-	team_name: &str,
-) -> TwitchResult<Team>
-{
-	let r = c.get::<Team>(&format!("/teams/{}", team_name))?;
-	Ok(r)
-}
-
 ///////////////////////////////////////
-// GetAllTeams
+// GetTopGames
 ///////////////////////////////////////
-pub struct TeamIterator<'c> {
+pub struct TopGames<'c> {
 	client: &'c TwitchClient,
-	cur: Option<SerdeAllTeams>,
+	cur: Option<SerdeTopGames>,
 	offset: i32,
 }
 
 #[derive(Deserialize, Debug)]
-pub struct Team {
-	#[serde(rename = "_id")]
-	pub id: i64,
-	pub background: Option<String>,
-	pub banner: String,
-	pub created_at: DateTime<UTC>,
-	pub display_name: String,
-	pub info: String,
-	pub logo: String,
-	pub name: String,
-	pub updated_at: DateTime<UTC>,
-	pub users: Option<Vec<User>>,
+pub struct TopGame {
+	pub channels: i32,
+	pub viewers: i32,
+	pub game: Game,
 }
 
 #[derive(Deserialize, Debug)]
-struct SerdeAllTeams {
-	teams: Vec<Team>,
+pub struct Game {
+	#[serde(rename = "_id")]
+	pub id: i64,
+	#[serde(rename = "box")]
+	pub _box: HashMap<String, String>,
+	pub giantbomb_id: i64,
+	pub logo: HashMap<String, String>,
+	pub name: String,
+	pub popularity: i32,
 }
 
-impl<'c> Iterator for TeamIterator<'c> {
-	type Item = Team;
+#[derive(Deserialize, Debug)]
+struct SerdeTopGames {
+	top: Vec<TopGame>,
+}
 
-	fn next(&mut self) -> Option<Team> {
-		let url = &format!("/teams?limit=100&offset={}", self.offset);
-		next_result!(self, &url, SerdeAllTeams, teams)
+impl<'c> Iterator for TopGames<'c> {
+	type Item = TopGame;
+
+	fn next(&mut self) -> Option<TopGame> {
+		let url = &format!("/games/top?limit=100&offset={}", self.offset);
+		next_result!(self, &url, SerdeTopGames, top)
 	}
 }
 
@@ -100,28 +89,15 @@ impl<'c> Iterator for TeamIterator<'c> {
 
 #[cfg(test)]
 mod tests {
-	use super::super::{
+	use crate::{
 		new,
-		response,
-		tests::{
-			CHANID,
-			CLIENTID,
-			TOKEN,
-		},
+		tests::CLIENTID,
 	};
 
 	#[test]
-	fn get_all() {
+	fn top() {
 		let c = new(String::from(CLIENTID));
-		match super::get_all(&c) {
-			Ok(mut r) => match r.next() {
-				Some(team) => assert_ne!(team.id, 0),
-				None => assert!(false),
-			},
-			Err(r) => {
-				println!("{:?}", r);
-				assert!(false);
-			}
-		}
+		let mut r = super::top(&c).unwrap();
+		r.next();
 	}
 }

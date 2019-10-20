@@ -20,16 +20,16 @@ extern crate serde_json;
 
 use self::chrono::prelude::*;
 
-use super::{
-	response::TwitchResult,
-	TwitchClient,
-};
-
 use std::{
 	self,
 	collections::HashMap,
 	fmt,
 	io::Write,
+};
+
+use super::super::{
+	response::TwitchResult,
+	TwitchClient,
 };
 
 /// Gets a specified video object
@@ -196,7 +196,7 @@ impl<'c> Iterator for FollowedVideoIterator<'c> {
 
 #[cfg(test)]
 mod tests {
-	use super::super::{
+	use crate::{
 		new,
 		response::ApiError,
 		tests::{

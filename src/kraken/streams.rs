@@ -27,8 +27,9 @@ use std::{
 
 use self::chrono::prelude::*;
 
-use super::{
-	channels::Channel,
+use super::channels::Channel;
+
+use crate::{
 	response::TwitchResult,
 	TwitchClient,
 };
@@ -266,7 +267,7 @@ pub struct FollowedStreams {
 
 #[cfg(test)]
 mod tests {
-	use super::super::{
+	use crate::{
 		new,
 		tests::{
 			CHANID,

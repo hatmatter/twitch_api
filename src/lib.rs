@@ -25,7 +25,7 @@
 //! ```
 //! extern crate libtwitch_rs;
 //!
-//! use libtwitch_rs::games;
+//! use libtwitch_rs::kraken::games::*;
 //!
 //! let c = libtwitch_rs::new("<clientid>".to_owned());
 //! // Print the name of the top 20 games
@@ -35,6 +35,7 @@
 //! 		}
 //! 	}
 //! ```
+#![recursion_limit = "512"]
 
 #[macro_use]
 extern crate serde_derive;
@@ -46,17 +47,7 @@ extern crate serde_json;
 
 #[macro_use]
 pub mod response;
-pub mod channel_feed;
-pub mod channels;
-pub mod chat;
-pub mod communities;
-pub mod games;
-pub mod ingests;
-pub mod search;
-pub mod streams;
-pub mod teams;
-pub mod users;
-pub mod videos;
+pub mod kraken;
 
 use response::{
 	ApiError,
@@ -107,7 +98,7 @@ pub struct Credentials {
 impl Credentials {
 	pub fn new(clid: String) -> Credentials {
 		Credentials {
-			client_id: clid.clone(),
+			client_id: clid,
 			// channel_id: None,
 			token: "".to_string(),
 		}
@@ -206,7 +197,7 @@ impl TwitchClient {
 			.send()?;
 		let mut s = String::new();
 		let _ = r.read_to_string(&mut s)?;
-		if s.len() == 0 {
+		if s.is_empty() {
 			Err(ApiError::empty_response())
 		}
 		else {
@@ -241,7 +232,7 @@ impl TwitchClient {
 			.send()?;
 		let mut s = String::new();
 		let _ = r.read_to_string(&mut s)?;
-		if s.len() == 0 {
+		if s.is_empty() {
 			Err(ApiError::empty_response())
 		}
 		else {
@@ -276,7 +267,7 @@ impl TwitchClient {
 			.send()?;
 		let mut s = String::new();
 		let _ = r.read_to_string(&mut s)?;
-		if s.len() == 0 {
+		if s.is_empty() {
 			Err(ApiError::empty_response())
 		}
 		else {
@@ -306,7 +297,7 @@ impl TwitchClient {
 			.send()?;
 		let mut s = String::new();
 		let _ = r.read_to_string(&mut s)?;
-		if s.len() == 0 {
+		if s.is_empty() {
 			Err(ApiError::empty_response())
 		}
 		else {
@@ -415,9 +406,9 @@ pub mod auth {
 #[cfg(test)]
 #[macro_use]
 extern crate pretty_assertions;
+
+#[allow(dead_code)]
 mod tests {
-	pub const CLIENTID: &'static str = "";
-	pub const TOKEN: &'static str = "";
-	pub const CHANID: &'static str = "";
-	pub const TESTCH: i64 = 12826;
+
+	include!("../credentials.rs");
 }

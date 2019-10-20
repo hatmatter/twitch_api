@@ -17,7 +17,7 @@
 
 use std::collections::HashMap;
 
-use super::{
+use super::super::{
 	response::TwitchResult,
 	TwitchClient,
 };
@@ -119,7 +119,7 @@ pub struct ChatEmoteImage {
 
 #[cfg(test)]
 mod tests {
-	use super::super::{
+	use crate::{
 		new,
 		tests::CLIENTID,
 	};
