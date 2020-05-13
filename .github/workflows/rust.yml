@@ -1,8 +1,18 @@
-# Based on https://github.com/actions-rs/meta/blob/master/recipes/quickstart.md
+name: libtwitch-rs tests
+on:
+  push:
+    branches:
+    - staging
+    - trying
+    - master
+  pull_request:
+    branches:
+    - staging
+    - trying
+    - master
 
-on: [push, pull_request]
-
-name: Run libtwitch-rs tests
+env:
+  RUST_BACKTRACE: 1
 
 jobs:
   check:
@@ -10,16 +20,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout sources
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
 
       - name: Install nightly toolchain
-        uses: actions-rs/toolchain@v1
+        uses: actions-rs/toolchain@v1.0.6
         with:
           toolchain: nightly
           override: true
 
       - name: Run cargo check
-        uses: actions-rs/cargo@v1
+        uses: actions-rs/cargo@v1.0.1
         with:
           command: check
 
@@ -28,17 +38,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout sources
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
 
       - name: Install nightly toolchain
-        uses: actions-rs/toolchain@v1
+        uses: actions-rs/toolchain@v1.0.6
         with:
           toolchain: nightly
           override: true
 
       - name: Run cargo test
-        uses: actions-rs/cargo@v1
-        continue-on-error: true  # WARNING/TODO: only activate this as long as we reimplement the tests
+        uses: actions-rs/cargo@v1.0.1
         with:
           command: test
 
@@ -47,10 +56,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout sources
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
 
       - name: Install nightly toolchain with rustfmt available
-        uses: actions-rs/toolchain@v1
+        uses: actions-rs/toolchain@v1.0.6
         with:
           profile: minimal
           toolchain: nightly
@@ -58,7 +67,7 @@ jobs:
           components: rustfmt
 
       - name: Run cargo fmt
-        uses: actions-rs/cargo@v1
+        uses: actions-rs/cargo@v1.0.1
         with:
           command: fmt
           args: --all -- --check
@@ -68,10 +77,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout sources
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
 
       - name: Install nightly toolchain with clippy available
-        uses: actions-rs/toolchain@v1
+        uses: actions-rs/toolchain@v1.0.6
         with:
           profile: minimal
           toolchain: nightly
@@ -79,17 +88,49 @@ jobs:
           components: clippy
 
       - name: Run cargo clippy
-        uses: actions-rs/cargo@v1
-        continue-on-error: true  # WARNING/TODO: only activate this as long as we reimplement the tests
+        uses: actions-rs/cargo@v1.0.1
         with:
           command: clippy
           args: -- -D warnings
 
   build:
-    name: Build 
+    name: Build
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v1
-    - name: Build
-      run: cargo build --verbose
+      - uses: actions/checkout@v2
+      - name: Build
+        run: cargo build --verbose
 
+  merge:
+    name: Merge
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v2
+
+      - name: Install nightly toolchain
+        uses: actions-rs/toolchain@v1.0.6
+        with:
+          profile: minimal
+          toolchain: nightly
+          override: true
+          components: clippy
+          
+      - name: Cargo check
+        uses: actions-rs/cargo@v1.0.1
+        with:
+          command: check
+    
+      - name: Run cargo test
+        uses: actions-rs/cargo@v1.0.1
+        with:
+          command: test
+
+      - name: Run cargo clippy
+        uses: actions-rs/cargo@v1.0.1
+        with:
+          command: clippy
+          args: -- -D warnings
+              
+      - name: Build
+        run: cargo build --verbose
