@@ -34,18 +34,19 @@ test = true
 doc = true
 
 [dependencies]
-chrono = { version = "0.3", features = ["serde", "rustc-serialize"] }
-hyper = "0.10.4"
-hyper-rustls = "0.6.0"
-serde = "0.9"
-serde_json = "0.9"
-serde_derive = "0.9"
-toml = "0.3.2"
-urlparse = "0.7.3"
+chrono = { version = "~0.3", features = ["serde", "rustc-serialize"] }
+hyper = "~0.10"
+hyper-rustls = "~0.6"
+serde = "~0.9"
+serde_json = "~0.9"
+serde_derive = "~0.9"
+toml = "~0.3"
+urlparse = "~0.7"
 
 [dev-dependencies]
-lazy_static = "1.4.0"
-pretty_assertions = "0.6.1"
+anyhow = "~1.0"
+lazy_static = "~1.4"
+pretty_assertions = "~0.6"
 
 [package.metadata.release]
 upload-doc = true
