@@ -22,6 +22,8 @@ use super::super::{
 	TwitchClient,
 };
 
+use serde::Deserialize;
+
 /// Gets a list of badges that can be used in chat for a specified channel
 ///
 /// #### Authentication: `None`

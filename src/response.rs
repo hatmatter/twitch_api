@@ -23,6 +23,7 @@ use std::{
 	io,
 };
 
+use serde::Deserialize;
 use thiserror::Error;
 
 pub type TwitchResult<T> = Result<T, ApiError>;
@@ -79,6 +80,7 @@ pub struct ErrorResponse {
 	pub error: String,
 	pub status: i32,
 	pub message: String,
+	#[serde(skip_deserializing)]
 	pub cause: Option<Box<dyn std::error::Error>>,
 }
 

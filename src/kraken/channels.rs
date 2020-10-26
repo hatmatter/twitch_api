@@ -20,6 +20,11 @@ extern crate serde_json;
 
 use self::chrono::prelude::*;
 
+use serde::{
+	Deserialize,
+	Serialize,
+};
+
 use super::{
 	communities::Community,
 	users::User,
@@ -298,7 +303,7 @@ pub struct Channel {
 	#[serde(rename = "_id")]
 	pub id: i64,
 	pub broadcaster_language: String,
-	pub created_at: DateTime<UTC>,
+	pub created_at: DateTime<Utc>,
 	pub display_name: String,
 	pub email: Option<String>,
 	pub followers: i32,
@@ -312,7 +317,7 @@ pub struct Channel {
 	pub profile_banner_background_color: Option<String>,
 	pub status: String,
 	pub stream_key: Option<String>,
-	pub updated_at: DateTime<UTC>,
+	pub updated_at: DateTime<Utc>,
 	pub url: String,
 	pub video_banner: Option<String>,
 	pub views: i32,
@@ -330,13 +335,13 @@ pub struct ChannelEditors {
 pub struct ChannelEditor {
 	pub _id: i64,
 	pub bio: Option<String>,
-	pub created_at: DateTime<UTC>,
+	pub created_at: DateTime<Utc>,
 	pub display_name: String,
 	pub logo: Option<String>,
 	pub name: String,
 	#[serde(rename = "type")]
 	pub _type: String,
-	pub updated_at: DateTime<UTC>,
+	pub updated_at: DateTime<Utc>,
 }
 
 #[derive(Debug)]
@@ -346,7 +351,7 @@ pub struct ChannelFollowers {
 
 #[derive(Deserialize, Debug)]
 pub struct ChannelFollow {
-	pub created_at: DateTime<UTC>,
+	pub created_at: DateTime<Utc>,
 	pub notifications: bool,
 	pub user: User,
 }
@@ -367,12 +372,12 @@ pub struct ChannelTeam {
 	pub _id: i64,
 	pub background: Option<String>,
 	pub banner: String,
-	pub created_at: DateTime<UTC>,
+	pub created_at: DateTime<Utc>,
 	pub display_name: String,
 	pub info: String,
 	pub logo: String,
 	pub name: String,
-	pub updated_at: DateTime<UTC>,
+	pub updated_at: DateTime<Utc>,
 }
 
 #[derive(Deserialize, Debug)]
@@ -389,7 +394,7 @@ pub struct ChannelSubscribers {
 pub struct ChannelSubscription {
 	#[serde(rename = "_id")]
 	pub id: String,
-	pub created_at: DateTime<UTC>,
+	pub created_at: DateTime<Utc>,
 	pub user: User,
 }
 

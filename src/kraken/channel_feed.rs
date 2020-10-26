@@ -20,6 +20,11 @@ extern crate serde_json;
 
 use self::chrono::prelude::*;
 
+use serde::{
+	Deserialize,
+	Serialize,
+};
+
 use super::users::User;
 
 use crate::{
@@ -269,7 +274,7 @@ pub fn delete_comment_reaction(
 pub struct FeedPost {
 	pub body: String,
 	pub comments: Option<SerdeFeedPostComments>,
-	pub created_at: DateTime<UTC>,
+	pub created_at: DateTime<Utc>,
 	pub deleted: Option<bool>,
 	pub embeds: Option<Vec<Value>>,
 	pub emotes: Option<Vec<Value>>,
@@ -312,7 +317,7 @@ pub struct NewFeedPostResponse {
 
 #[derive(Deserialize, Debug)]
 pub struct NewReactionResponse {
-	pub created_at: DateTime<UTC>,
+	pub created_at: DateTime<Utc>,
 	pub emote_id: String,
 	pub id: String,
 	pub user: Option<User>,
@@ -364,7 +369,7 @@ pub struct FeedPostCommentIterator<'c> {
 #[derive(Deserialize, Debug)]
 pub struct FeedPostComment {
 	pub body: String,
-	pub created_at: DateTime<UTC>,
+	pub created_at: DateTime<Utc>,
 	pub deleted: bool,
 	pub emotes: Vec<FeedPostEmotes>,
 	pub id: String,

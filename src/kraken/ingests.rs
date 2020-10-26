@@ -23,6 +23,8 @@ use super::super::{
 	TwitchClient,
 };
 
+use serde::Deserialize;
+
 /// Gets a list of Twitch ingest servers
 ///
 /// The Twitch ingesting system is the first stop for

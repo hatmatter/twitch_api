@@ -26,6 +26,8 @@ use std::{
 
 use self::urlparse::quote;
 
+use serde::Deserialize;
+
 use super::{
 	channels::Channel,
 	games::Game,
@@ -204,7 +206,6 @@ impl<'c> Iterator for SearchStreamIterator<'c> {
 mod tests {
 	use crate::{
 		new,
-		response,
 		tests::CLIENTID,
 	};
 

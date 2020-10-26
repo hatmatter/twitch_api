@@ -37,9 +37,6 @@
 //! ```
 #![recursion_limit = "512"]
 
-#[macro_use]
-extern crate serde_derive;
-
 extern crate hyper;
 extern crate hyper_rustls;
 extern crate serde;
@@ -48,6 +45,11 @@ extern crate serde_json;
 #[macro_use]
 pub mod response;
 pub mod kraken;
+
+use serde::{
+	Serialize,
+	Deserialize,
+};
 
 use response::{
 	ApiError,
@@ -75,10 +77,6 @@ use hyper::{
 	Client,
 };
 
-use serde::{
-	de::Deserialize,
-	Serialize,
-};
 use std::{
 	fs,
 	io::{
@@ -187,7 +185,7 @@ impl TwitchClient {
 		self.cred.token = String::from(token);
 	}
 
-	pub fn get<T: Deserialize>(
+	pub fn get<'a, T: Deserialize<'a>>(
 		&self,
 		path: &str,
 	) -> TwitchResult<T>
@@ -202,7 +200,6 @@ impl TwitchClient {
 		}
 		else {
 			match serde_json::from_str(&s) {
-				Ok(x) => Ok(x),
 				Err(err) => {
 					if let Ok(mut e) = serde_json::from_str::<ErrorResponse>(&s)
 					{
@@ -212,19 +209,20 @@ impl TwitchClient {
 					writeln!(&mut stderr(), "Serde Parse Fail:\n\"{}\"", &s)
 						.unwrap();
 					Err(ApiError::from(err))
-				}
+				},
+				Ok(x) => Ok(x)
 			}
 		}
 	}
 
-	pub fn post<T, R>(
+	pub fn post<'a, T, R>(
 		&self,
 		path: &str,
 		data: &T,
 	) -> TwitchResult<R>
 	where
 		T: Serialize,
-		R: Deserialize,
+		R: Deserialize<'a>,
 	{
 		let mut r = self
 			.build_request(path, |url| self.client.post(url))
@@ -237,7 +235,6 @@ impl TwitchClient {
 		}
 		else {
 			match serde_json::from_str(&s) {
-				Ok(x) => Ok(x),
 				Err(err) => {
 					if let Ok(mut e) = serde_json::from_str::<ErrorResponse>(&s)
 					{
@@ -247,19 +244,20 @@ impl TwitchClient {
 					writeln!(&mut stderr(), "Serde Parse Fail:\n\"{}\"", &s)
 						.unwrap();
 					Err(ApiError::from(err))
-				}
+				},
+				Ok(x) => Ok(x)
 			}
 		}
 	}
 
-	pub fn put<T, R>(
+	pub fn put<'a, T, R>(
 		&self,
 		path: &str,
 		data: &T,
 	) -> TwitchResult<R>
 	where
 		T: Serialize,
-		R: Deserialize,
+		R: Deserialize<'a>,
 	{
 		let mut r = self
 			.build_request(path, |url| self.client.put(url))
@@ -272,7 +270,6 @@ impl TwitchClient {
 		}
 		else {
 			match serde_json::from_str(&s) {
-				Ok(x) => Ok(x),
 				Err(err) => {
 					if let Ok(mut e) = serde_json::from_str::<ErrorResponse>(&s)
 					{
@@ -282,12 +279,13 @@ impl TwitchClient {
 					writeln!(&mut stderr(), "Serde Parse Fail:\n\"{}\"", &s)
 						.unwrap();
 					Err(ApiError::from(err))
-				}
+				},
+				Ok(x) => Ok(x)
 			}
 		}
 	}
 
-	pub fn delete<T: Deserialize>(
+	pub fn delete<'a, T: Deserialize<'a>>(
 		&self,
 		path: &str,
 	) -> TwitchResult<T>
@@ -302,7 +300,6 @@ impl TwitchClient {
 		}
 		else {
 			match serde_json::from_str(&s) {
-				Ok(x) => Ok(x),
 				Err(err) => {
 					if let Ok(mut e) = serde_json::from_str::<ErrorResponse>(&s)
 					{
@@ -312,7 +309,8 @@ impl TwitchClient {
 					writeln!(&mut stderr(), "Serde Parse Fail:\n\"{}\"", &s)
 						.unwrap();
 					Err(ApiError::from(err))
-				}
+				},
+				Ok(x) => Ok(x)
 			}
 		}
 	}

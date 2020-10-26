@@ -33,6 +33,10 @@ use crate::{
 	TwitchClient,
 };
 
+use serde::{
+	Deserialize,
+};
+
 use serde_json::Value;
 use std::{
 	self,
@@ -252,7 +256,7 @@ pub struct User {
 	#[serde(rename = "_id")]
 	pub id: i64,
 	pub bio: String,
-	pub created_at: DateTime<UTC>,
+	pub created_at: DateTime<Utc>,
 	pub display_name: String,
 	pub email: Option<String>,
 	pub email_verified: Option<bool>,
@@ -261,13 +265,13 @@ pub struct User {
 	pub notifications: Option<UserNotifications>,
 	#[serde(rename = "type")]
 	pub _type: String,
-	updated_at: DateTime<UTC>,
+	updated_at: DateTime<Utc>,
 }
 
 #[derive(Deserialize, Debug)]
 pub struct UserSubFollow {
 	pub channel: Channel,
-	pub created_at: DateTime<UTC>,
+	pub created_at: DateTime<Utc>,
 	pub notifications: bool,
 }
 
@@ -343,7 +347,6 @@ mod tests {
 		new,
 		response::ApiError,
 		tests::{
-			CHANID,
 			CLIENTID,
 			TESTCH,
 			TOKEN,

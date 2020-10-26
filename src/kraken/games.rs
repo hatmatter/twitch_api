@@ -24,6 +24,8 @@ use std::{
 	io::Write,
 };
 
+use serde::Deserialize;
+
 use super::super::{
 	response::TwitchResult,
 	TwitchClient,
