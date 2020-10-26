@@ -11,7 +11,7 @@ Cargo.lock
 **/*.rs.bk
 
 # IDE
-/.idea/
+.idea/
 /*.sublime-project
-/*.sublime-workspace
-
+*.sublime-workspace
+.vscode/settings.json
