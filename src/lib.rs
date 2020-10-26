@@ -30,10 +30,10 @@
 //! let c = libtwitch_rs::new("<clientid>".to_owned());
 //! // Print the name of the top 20 games
 //! if let Ok(games) = games::TopGames::get(&c) {
-//! 	for entry in games.take(20) {
-//! 		println!("{}: {}", entry.game.name, entry.viewers);
-//! 		}
-//! 	}
+//!     for entry in games.take(20) {
+//!         println!("{}: {}", entry.game.name, entry.viewers);
+//!         }
+//!     }
 //! ```
 #![recursion_limit = "512"]
 
