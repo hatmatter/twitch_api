@@ -5,17 +5,24 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
-- Using Bors build bot
-- Using Cargo release to release versions
-- New Rust fmt settings using nightly toolchain
-- Adopting GH actions to nightly toolchain as well
-- Added example credentials for easier testing
-- Added status for API versions in readme
-- Changing crate type
-- Reorganize APIv5
-- Adapt imports
+## Fixed
 - Fix for top games parse error from [@MarkJGx](https://github.com/MarkJGx)
 
+## Added
+- Using Bors build bot (repository)
+- Using Cargo release to release versions
+- New Rust fmt settings using nightly toolchain
+- Added example credentials for easier testing
+- Added status for API versions in readme
+- Adapt imports
+
+## Changed
+- Reorganize APIv5
+- Changed crate type
+- Adopting GH actions to nightly toolchain as well
+
+## Removed
+- Used thiserror and removed removed self-written Error trait implements
 
 ## [0.1.2] - 2019-10-16
 ### Added
