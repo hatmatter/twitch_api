@@ -47,8 +47,8 @@ pub mod response;
 pub mod kraken;
 
 use serde::{
-	Serialize,
 	Deserialize,
+	Serialize,
 };
 
 use response::{
@@ -209,8 +209,8 @@ impl TwitchClient {
 					writeln!(&mut stderr(), "Serde Parse Fail:\n\"{}\"", &s)
 						.unwrap();
 					Err(ApiError::from(err))
-				},
-				Ok(x) => Ok(x)
+				}
+				Ok(x) => Ok(x),
 			}
 		}
 	}
@@ -244,8 +244,8 @@ impl TwitchClient {
 					writeln!(&mut stderr(), "Serde Parse Fail:\n\"{}\"", &s)
 						.unwrap();
 					Err(ApiError::from(err))
-				},
-				Ok(x) => Ok(x)
+				}
+				Ok(x) => Ok(x),
 			}
 		}
 	}
@@ -279,8 +279,8 @@ impl TwitchClient {
 					writeln!(&mut stderr(), "Serde Parse Fail:\n\"{}\"", &s)
 						.unwrap();
 					Err(ApiError::from(err))
-				},
-				Ok(x) => Ok(x)
+				}
+				Ok(x) => Ok(x),
 			}
 		}
 	}
@@ -309,8 +309,8 @@ impl TwitchClient {
 					writeln!(&mut stderr(), "Serde Parse Fail:\n\"{}\"", &s)
 						.unwrap();
 					Err(ApiError::from(err))
-				},
-				Ok(x) => Ok(x)
+				}
+				Ok(x) => Ok(x),
 			}
 		}
 	}

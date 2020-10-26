@@ -104,9 +104,7 @@ impl<'c> Iterator for TeamIterator<'c> {
 mod tests {
 	use crate::{
 		new,
-		tests::{
-			CLIENTID,
-		},
+		tests::CLIENTID,
 	};
 
 	#[test]

@@ -18,8 +18,8 @@
 extern crate chrono;
 extern crate serde_json;
 
-use serde::Deserialize;
 use self::chrono::prelude::*;
+use serde::Deserialize;
 
 use std::{
 	self,
