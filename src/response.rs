@@ -19,19 +19,25 @@ extern crate hyper;
 extern crate serde_json;
 
 use std::{
-	error::Error,
 	fmt,
 	io,
 };
 
+use thiserror::Error;
+
 pub type TwitchResult<T> = Result<T, ApiError>;
 
-#[derive(Debug)]
+#[derive(Error, Debug)]
 pub enum ApiError {
+	#[error("HTTP error")]
 	HyperErr(hyper::error::Error),
+	#[error("I/O error")]
 	IoError(io::Error),
+	#[error("Serde error while parsing")]
 	ParseError(serde_json::error::Error),
+	#[error("Twitch API error")]
 	TwitchError(ErrorResponse),
+	#[error("Empty response")]
 	EmptyResponse(EmptyResponse),
 }
 
@@ -65,44 +71,6 @@ impl ApiError {
 	}
 }
 
-impl Error for ApiError {
-	fn description(&self) -> &str {
-		match *self {
-			ApiError::HyperErr(ref err) => err.description(),
-			ApiError::IoError(ref err) => err.description(),
-			ApiError::ParseError(ref err) => err.description(),
-			ApiError::TwitchError(ref err) => &err.error,
-			ApiError::EmptyResponse(_) => "EmptyResponse",
-		}
-	}
-
-	fn cause(&self) -> Option<&dyn Error> {
-		Some(match *self {
-			ApiError::HyperErr(ref err) => err as &dyn Error,
-			ApiError::IoError(ref err) => err as &dyn Error,
-			ApiError::ParseError(ref err) => err as &dyn Error,
-			ApiError::TwitchError(ref err) => err as &dyn Error,
-			ApiError::EmptyResponse(ref err) => err as &dyn Error,
-		})
-	}
-}
-
-impl fmt::Display for ApiError {
-	fn fmt(
-		&self,
-		f: &mut fmt::Formatter,
-	) -> fmt::Result
-	{
-		match *self {
-			ApiError::HyperErr(ref err) => fmt::Display::fmt(err, f),
-			ApiError::IoError(ref err) => fmt::Display::fmt(err, f),
-			ApiError::ParseError(ref err) => fmt::Display::fmt(err, f),
-			ApiError::TwitchError(ref err) => fmt::Display::fmt(err, f),
-			ApiError::EmptyResponse(ref err) => fmt::Display::fmt(err, f),
-		}
-	}
-}
-
 ///////////////////////////////////////
 // ErrorResponse
 ///////////////////////////////////////
@@ -111,8 +79,7 @@ pub struct ErrorResponse {
 	pub error: String,
 	pub status: i32,
 	pub message: String,
-	#[serde(skip_deserializing)]
-	pub cause: Option<Box<Error>>,
+	pub cause: Option<Box<dyn std::error::Error>>,
 }
 
 impl fmt::Display for ErrorResponse {
@@ -129,21 +96,6 @@ impl fmt::Display for ErrorResponse {
 	}
 }
 
-impl Error for ErrorResponse {
-	fn description(&self) -> &str {
-		&self.error
-	}
-
-	fn cause(&self) -> Option<&dyn Error> {
-		if let Some(ref cause) = self.cause {
-			Some(cause.as_ref())
-		}
-		else {
-			None
-		}
-	}
-}
-
 ///////////////////////////////////////
 // EmptyResponse
 ///////////////////////////////////////
@@ -157,16 +109,6 @@ impl fmt::Display for EmptyResponse {
 	) -> fmt::Result
 	{
 		write!(f, "EmptyResponse")
-	}
-}
-
-impl Error for EmptyResponse {
-	fn description(&self) -> &str {
-		"EmptyResponse"
-	}
-
-	fn cause(&self) -> Option<&dyn Error> {
-		None
 	}
 }
 

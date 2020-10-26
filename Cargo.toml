@@ -42,9 +42,9 @@ serde_json = "~0.9"
 serde_derive = "~0.9"
 toml = "~0.3"
 urlparse = "~0.7"
+thiserror = "~1.0"
 
 [dev-dependencies]
-anyhow = "~1.0"
 lazy_static = "~1.4"
 pretty_assertions = "~0.6"
 
