@@ -33,26 +33,29 @@ if let Some(user) = match users::get(&c) {
 
 # Supported API versions
 
-Endpoints         | Kraken/v5          |  Helix/v6 [WIP]    |
-:----------------:|:------------------:|:------------------:|
-Analytics         | :heavy_minus_sign: | :x:                |
-Bits              | :heavy_check_mark: | :x:                |
-Channels          | :heavy_check_mark: | :heavy_minus_sign: |
-Chat              | :heavy_check_mark: | :heavy_minus_sign: |
-Clips             | :heavy_check_mark: | :x:                |
-Collections       | :heavy_check_mark: | :heavy_minus_sign: |
-Entitlements      | :heavy_minus_sign: | :x:                |
-Games             | :heavy_check_mark: | :x:                |
-Ingests           | :heavy_check_mark: | :heavy_minus_sign: |
-Moderation        | :heavy_minus_sign: | :x:                |
-Search            | :heavy_check_mark: | :heavy_minus_sign: |
-Streams           | :heavy_check_mark: | :x:                |
-Subscriptions     | :heavy_minus_sign: | :x:                |
-Tags              | :heavy_minus_sign: | :x:                |
-Teams             | :heavy_check_mark: | :heavy_minus_sign: |
-Users             | :heavy_check_mark: | :x:                |
-Videos            | :heavy_check_mark: | :x:                |
-Webhooks          | :heavy_minus_sign: | :x:                |
+__Important Note:__ Kraken is deprecated and Helix (the new API version) 
+is out of scope of this repository currently. 
+
+Endpoints         | Kraken/v5          | 
+:----------------:|:------------------:|
+Analytics         | :heavy_minus_sign: |
+Bits              | :heavy_check_mark: |
+Channels          | :heavy_check_mark: |
+Chat              | :heavy_check_mark: |
+Clips             | :heavy_check_mark: |
+Collections       | :heavy_check_mark: |
+Entitlements      | :heavy_minus_sign: |
+Games             | :heavy_check_mark: |
+Ingests           | :heavy_check_mark: |
+Moderation        | :heavy_minus_sign: |
+Search            | :heavy_check_mark: |
+Streams           | :heavy_check_mark: |
+Subscriptions     | :heavy_minus_sign: |
+Tags              | :heavy_minus_sign: |
+Teams             | :heavy_check_mark: |
+Users             | :heavy_check_mark: |
+Videos            | :heavy_check_mark: |
+Webhooks          | :heavy_minus_sign: |
 
 
 # Links
