@@ -15,9 +15,6 @@
 // (Modifications|Other (data|code)|Everything else) Copyright 2019 the
 // libtwitch-rs authors.  See copying.md for further legal info.
 
-extern crate hyper;
-extern crate serde_json;
-
 use std::{
 	fmt,
 	io,
@@ -31,7 +28,7 @@ pub type TwitchResult<T> = Result<T, ApiError>;
 #[derive(Error, Debug)]
 pub enum ApiError {
 	#[error("HTTP error")]
-	HyperErr(hyper::error::Error),
+	ReqwestErr(reqwest::Error),
 	#[error("I/O error")]
 	IoError(io::Error),
 	#[error("Serde error while parsing")]
@@ -42,9 +39,9 @@ pub enum ApiError {
 	EmptyResponse(EmptyResponse),
 }
 
-impl From<hyper::error::Error> for ApiError {
-	fn from(err: hyper::error::Error) -> ApiError {
-		ApiError::HyperErr(err)
+impl From<reqwest::Error> for ApiError {
+	fn from(err: reqwest::Error) -> ApiError {
+		ApiError::ReqwestErr(err)
 	}
 }
 

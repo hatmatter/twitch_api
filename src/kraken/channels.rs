@@ -15,10 +15,7 @@
 // (Modifications|Other (data|code)|Everything else) Copyright 2019 the
 // libtwitch-rs authors.  See copying.md for further legal info.
 
-extern crate chrono;
-extern crate serde_json;
-
-use self::chrono::prelude::*;
+use chrono::prelude::*;
 
 use serde::{
 	Deserialize,

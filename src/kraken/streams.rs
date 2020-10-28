@@ -15,17 +15,13 @@
 // (Modifications|Other (data|code)|Everything else) Copyright 2019 the
 // libtwitch-rs authors.  See copying.md for further legal info.
 
-extern crate chrono;
-extern crate serde_json;
-extern crate urlparse;
-
 use std::{
 	self,
 	collections::HashMap,
 	io::Write,
 };
 
-use self::chrono::prelude::*;
+use chrono::prelude::*;
 use serde::Deserialize;
 
 use super::channels::Channel;
@@ -93,7 +89,7 @@ pub fn summary(
 /// Gets a list of all featured live streams
 ///
 /// #### Authentication: `None`
-pub fn featured<'c>(c: &'c TwitchClient) -> TwitchResult<FeaturedIterator<'c>> {
+pub fn featured(c: &TwitchClient) -> TwitchResult<FeaturedIterator> {
 	let iter = FeaturedIterator {
 		client: c,
 		cur: None,

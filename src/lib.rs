@@ -37,54 +37,37 @@
 //! ```
 #![recursion_limit = "512"]
 
-extern crate hyper;
-extern crate hyper_rustls;
-extern crate serde;
-extern crate serde_json;
-
 #[macro_use]
 pub mod response;
 pub mod kraken;
 
 use serde::{
+	de::DeserializeOwned,
 	Deserialize,
 	Serialize,
 };
 
 use response::{
 	ApiError,
-	ErrorResponse,
 	TwitchResult,
 };
 
-use hyper::{
-	client::RequestBuilder,
+use reqwest::{
+	blocking::{
+		Client,
+		RequestBuilder,
+	},
 	header::{
-		qitem,
-		Accept,
-		Authorization,
-		ContentType,
-		Headers,
+		HeaderMap,
+		HeaderName,
+		HeaderValue,
+		ACCEPT,
+		AUTHORIZATION,
+		CONTENT_TYPE,
 	},
-	mime::{
-		Attr,
-		Mime,
-		SubLevel,
-		TopLevel,
-		Value,
-	},
-	net::HttpsConnector,
-	Client,
 };
 
-use std::{
-	fs,
-	io::{
-		stderr,
-		Read,
-		Write,
-	},
-};
+use std::fs;
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Credentials {
@@ -137,42 +120,39 @@ pub struct TwitchClient {
 
 pub fn new(clientid: String) -> TwitchClient {
 	TwitchClient {
-		client: Client::with_connector(HttpsConnector::new(
-			hyper_rustls::TlsClient::new(),
-		)),
+		client: Client::new(),
 		cred: Credentials::new(clientid),
 	}
 }
 
 impl TwitchClient {
-	fn build_request<'a, F>(
+	fn build_request<F>(
 		&self,
 		path: &str,
 		build: F,
-	) -> RequestBuilder<'a>
+	) -> RequestBuilder
 	where
-		F: Fn(&str) -> RequestBuilder<'a>,
+		F: Fn(&str) -> RequestBuilder,
 	{
 		let url = String::from("https://api.twitch.tv/kraken") + path;
-		let mut headers = Headers::new();
+		let oauth = format!("OAuth {}", self.cred.token);
+		let cid = format!("{:#?}", self.cred.client_id);
 
-		headers.set_raw("Client-ID", vec![self
-			.cred
-			.client_id
-			.clone()
-			.into_bytes()]);
-		headers.set(Accept(vec![qitem(Mime(
-			TopLevel::Application,
-			SubLevel::Ext("vnd.twitchtv.v5+json".to_owned()),
-			vec![],
-		))]));
-		headers.set(ContentType(Mime(
-			TopLevel::Application,
-			SubLevel::Json,
-			vec![(Attr::Charset, Value::Utf8)],
-		)));
+		let mut headers = HeaderMap::new();
 
-		headers.set(Authorization(format!("OAuth {}", self.cred.token)));
+		headers.insert(
+			HeaderName::from_static("CLIENT-ID"),
+			HeaderValue::from_str(&cid).unwrap(),
+		);
+		headers.insert(
+			CONTENT_TYPE,
+			HeaderValue::from_static("application/json; charset=UTF-8"),
+		);
+		headers.insert(
+			ACCEPT,
+			HeaderValue::from_static("application/vnd.twitchtv.v5+json"),
+		);
+		headers.insert(AUTHORIZATION, HeaderValue::from_str(&oauth).unwrap());
 
 		build(&url).headers(headers)
 	}
@@ -185,133 +165,89 @@ impl TwitchClient {
 		self.cred.token = String::from(token);
 	}
 
-	pub fn get<'a, T: Deserialize<'a>>(
+	pub fn get<T: DeserializeOwned>(
 		&self,
 		path: &str,
 	) -> TwitchResult<T>
 	{
-		let mut r = self
+		let r = self
 			.build_request(path, |url| self.client.get(url))
-			.send()?;
-		let mut s = String::new();
-		let _ = r.read_to_string(&mut s)?;
-		if s.is_empty() {
-			Err(ApiError::empty_response())
-		}
-		else {
-			match serde_json::from_str(&s) {
-				Err(err) => {
-					if let Ok(mut e) = serde_json::from_str::<ErrorResponse>(&s)
-					{
-						e.cause = Some(Box::new(err));
-						return Err(ApiError::from(e));
-					}
-					writeln!(&mut stderr(), "Serde Parse Fail:\n\"{}\"", &s)
-						.unwrap();
-					Err(ApiError::from(err))
-				}
+			.send()?
+			.error_for_status();
+
+		match r {
+			Err(err) => Err(ApiError::from(err)),
+			Ok(x) => match x.json() {
+				Err(err) => Err(ApiError::from(err)),
 				Ok(x) => Ok(x),
-			}
+			},
 		}
 	}
 
-	pub fn post<'a, T, R>(
+	pub fn post<T, R>(
 		&self,
 		path: &str,
 		data: &T,
 	) -> TwitchResult<R>
 	where
 		T: Serialize,
-		R: Deserialize<'a>,
+		R: DeserializeOwned,
 	{
-		let mut r = self
+		let r = self
 			.build_request(path, |url| self.client.post(url))
-			.body(&serde_json::to_string(data)?)
-			.send()?;
-		let mut s = String::new();
-		let _ = r.read_to_string(&mut s)?;
-		if s.is_empty() {
-			Err(ApiError::empty_response())
-		}
-		else {
-			match serde_json::from_str(&s) {
-				Err(err) => {
-					if let Ok(mut e) = serde_json::from_str::<ErrorResponse>(&s)
-					{
-						e.cause = Some(Box::new(err));
-						return Err(ApiError::from(e));
-					}
-					writeln!(&mut stderr(), "Serde Parse Fail:\n\"{}\"", &s)
-						.unwrap();
-					Err(ApiError::from(err))
-				}
+			.json(&data)
+			.send()?
+			.error_for_status();
+
+		match r {
+			Err(err) => Err(ApiError::from(err)),
+			Ok(x) => match x.json() {
+				Err(err) => Err(ApiError::from(err)),
 				Ok(x) => Ok(x),
-			}
+			},
 		}
 	}
 
-	pub fn put<'a, T, R>(
+	pub fn put<T, R>(
 		&self,
 		path: &str,
 		data: &T,
 	) -> TwitchResult<R>
 	where
 		T: Serialize,
-		R: Deserialize<'a>,
+		R: DeserializeOwned,
 	{
-		let mut r = self
+		let r = self
 			.build_request(path, |url| self.client.put(url))
-			.body(&serde_json::to_string(data)?)
-			.send()?;
-		let mut s = String::new();
-		let _ = r.read_to_string(&mut s)?;
-		if s.is_empty() {
-			Err(ApiError::empty_response())
-		}
-		else {
-			match serde_json::from_str(&s) {
-				Err(err) => {
-					if let Ok(mut e) = serde_json::from_str::<ErrorResponse>(&s)
-					{
-						e.cause = Some(Box::new(err));
-						return Err(ApiError::from(e));
-					}
-					writeln!(&mut stderr(), "Serde Parse Fail:\n\"{}\"", &s)
-						.unwrap();
-					Err(ApiError::from(err))
-				}
+			.json(&data)
+			.send()?
+			.error_for_status();
+
+		match r {
+			Err(err) => Err(ApiError::from(err)),
+			Ok(x) => match x.json() {
+				Err(err) => Err(ApiError::from(err)),
 				Ok(x) => Ok(x),
-			}
+			},
 		}
 	}
 
-	pub fn delete<'a, T: Deserialize<'a>>(
+	pub fn delete<T: DeserializeOwned>(
 		&self,
 		path: &str,
 	) -> TwitchResult<T>
 	{
-		let mut r = self
+		let r = self
 			.build_request(path, |url| self.client.delete(url))
-			.send()?;
-		let mut s = String::new();
-		let _ = r.read_to_string(&mut s)?;
-		if s.is_empty() {
-			Err(ApiError::empty_response())
-		}
-		else {
-			match serde_json::from_str(&s) {
-				Err(err) => {
-					if let Ok(mut e) = serde_json::from_str::<ErrorResponse>(&s)
-					{
-						e.cause = Some(Box::new(err));
-						return Err(ApiError::from(e));
-					}
-					writeln!(&mut stderr(), "Serde Parse Fail:\n\"{}\"", &s)
-						.unwrap();
-					Err(ApiError::from(err))
-				}
+			.send()?
+			.error_for_status();
+
+		match r {
+			Err(err) => Err(ApiError::from(err)),
+			Ok(x) => match x.json() {
+				Err(err) => Err(ApiError::from(err)),
 				Ok(x) => Ok(x),
-			}
+			},
 		}
 	}
 }

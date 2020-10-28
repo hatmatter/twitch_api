@@ -15,9 +15,6 @@
 // (Modifications|Other (data|code)|Everything else) Copyright 2019 the
 // libtwitch-rs authors.  See copying.md for further legal info.
 
-extern crate chrono;
-extern crate serde_json;
-
 use super::users::User;
 
 use crate::{
@@ -346,7 +343,7 @@ pub fn delete_timeout(
 /// Gets the top communities by viewer count
 ///
 /// #### Authentication: `None`
-pub fn top<'c>(c: &'c TwitchClient) -> TwitchResult<TopCommunities<'c>> {
+pub fn top(c: &TwitchClient) -> TwitchResult<TopCommunities> {
 	let iter = TopCommunities {
 		client: c,
 		cur: None,

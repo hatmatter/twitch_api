@@ -15,10 +15,7 @@
 // (Modifications|Other (data|code)|Everything else) Copyright 2019 the
 // libtwitch-rs authors.  See copying.md for further legal info.
 
-extern crate chrono;
-extern crate serde_json;
-
-use self::chrono::prelude::*;
+use chrono::prelude::*;
 use serde::Deserialize;
 
 use std::{
@@ -73,9 +70,7 @@ pub fn top<'c>(
 /// based on a specified OAuth token
 ///
 /// #### Authentication: `user_read`
-pub fn followed<'c>(
-	c: &'c TwitchClient
-) -> TwitchResult<FollowedVideoIterator<'c>> {
+pub fn followed(c: &TwitchClient) -> TwitchResult<FollowedVideoIterator> {
 	let iter = FollowedVideoIterator {
 		client: c,
 		cur: None,

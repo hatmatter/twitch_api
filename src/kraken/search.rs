@@ -15,16 +15,12 @@
 // (Modifications|Other (data|code)|Everything else) Copyright 2019 the
 // libtwitch-rs authors.  See copying.md for further legal info.
 
-extern crate chrono;
-extern crate serde_json;
-extern crate urlparse;
-
 use std::{
 	self,
 	io::Write,
 };
 
-use self::urlparse::quote;
+use urlparse::quote;
 
 use serde::Deserialize;
 
