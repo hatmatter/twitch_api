@@ -16,8 +16,8 @@
 // libtwitch-rs authors.  See copying.md for further legal info.
 
 use std::{
-	self,
-	io::Write,
+    self,
+    io::Write,
 };
 
 use chrono::prelude::*;
@@ -26,70 +26,70 @@ use serde::Deserialize;
 use super::users::User;
 
 use crate::{
-	response::TwitchResult,
-	TwitchClient,
+    response::TwitchResult,
+    TwitchClient,
 };
 
 /// Gets all active teams
 ///
 /// #### Authentication: `None`
 pub fn get_all(c: &TwitchClient) -> TwitchResult<TeamIterator> {
-	let iter = TeamIterator {
-		client: c,
-		cur: None,
-		offset: 0,
-	};
-	Ok(iter)
+    let iter = TeamIterator {
+        client: c,
+        cur: None,
+        offset: 0,
+    };
+    Ok(iter)
 }
 
 /// Gets a specified team object
 ///
 /// #### Authentication: `None`
 pub fn get(
-	c: &TwitchClient,
-	team_name: &str,
+    c: &TwitchClient,
+    team_name: &str,
 ) -> TwitchResult<Team>
 {
-	let r = c.get::<Team>(&format!("/teams/{}", team_name))?;
-	Ok(r)
+    let r = c.get::<Team>(&format!("/teams/{}", team_name))?;
+    Ok(r)
 }
 
 ///////////////////////////////////////
 // GetAllTeams
 ///////////////////////////////////////
 pub struct TeamIterator<'c> {
-	client: &'c TwitchClient,
-	cur: Option<SerdeAllTeams>,
-	offset: i32,
+    client: &'c TwitchClient,
+    cur: Option<SerdeAllTeams>,
+    offset: i32,
 }
 
 #[derive(Deserialize, Debug)]
 pub struct Team {
-	#[serde(rename = "_id")]
-	pub id: i64,
-	pub background: Option<String>,
-	pub banner: String,
-	pub created_at: DateTime<Utc>,
-	pub display_name: String,
-	pub info: String,
-	pub logo: String,
-	pub name: String,
-	pub updated_at: DateTime<Utc>,
-	pub users: Option<Vec<User>>,
+    #[serde(rename = "_id")]
+    pub id: i64,
+    pub background: Option<String>,
+    pub banner: String,
+    pub created_at: DateTime<Utc>,
+    pub display_name: String,
+    pub info: String,
+    pub logo: String,
+    pub name: String,
+    pub updated_at: DateTime<Utc>,
+    pub users: Option<Vec<User>>,
 }
 
 #[derive(Deserialize, Debug)]
 struct SerdeAllTeams {
-	teams: Vec<Team>,
+    teams: Vec<Team>,
 }
 
 impl<'c> Iterator for TeamIterator<'c> {
-	type Item = Team;
+    type Item = Team;
 
-	fn next(&mut self) -> Option<Team> {
-		let url = &format!("/teams?limit=100&offset={}", self.offset);
-		next_result!(self, &url, SerdeAllTeams, teams)
-	}
+    fn next(&mut self) -> Option<Team> {
+        let url = &format!("/teams?limit=100&offset={}", self.offset);
+        next_result!(self, &url, SerdeAllTeams, teams)
+    }
 }
 
 ///////////////////////////////////////
@@ -98,23 +98,23 @@ impl<'c> Iterator for TeamIterator<'c> {
 
 #[cfg(test)]
 mod tests {
-	use crate::{
-		new,
-		tests::CLIENTID,
-	};
+    use crate::{
+        new,
+        tests::CLIENTID,
+    };
 
-	#[test]
-	fn get_all() {
-		let c = new(String::from(CLIENTID));
-		match super::get_all(&c) {
-			Ok(mut r) => match r.next() {
-				Some(team) => assert_ne!(team.id, 0),
-				None => assert!(false),
-			},
-			Err(r) => {
-				println!("{:?}", r);
-				assert!(false);
-			}
-		}
-	}
+    #[test]
+    fn get_all() {
+        let c = new(String::from(CLIENTID));
+        match super::get_all(&c) {
+            Ok(mut r) => match r.next() {
+                Some(team) => assert_ne!(team.id, 0),
+                None => assert!(false),
+            },
+            Err(r) => {
+                println!("{:?}", r);
+                assert!(false);
+            }
+        }
+    }
 }
